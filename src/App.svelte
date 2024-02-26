@@ -10,6 +10,7 @@
 	import { configurationMissing, configurationStore } from '$stores/configStore';
 	import { modalStore } from '$stores/modalStore';
 
+	import AppMrList from './AppMRList.svelte';
 	import AppNavigation from './AppNavigation.svelte';
 	import AppError from './components/appStatusCards/AppError.svelte';
 	import AppLoading from './components/appStatusCards/AppLoading.svelte';
@@ -18,17 +19,21 @@
 		//const p = await glInitial;
 		//const u = await glUsers;
 	});
+	let appMrList: AppMrList;
 </script>
 
-<AppNavigation />
+<AppNavigation on:refresh={() => appMrList.refresh()} />
 {#key $configurationStore}
 	{#if $configurationMissing}
 		<AppConfigMissing />
 	{:else}
 		{#await glInitial}
-			<AppLoading />
+			<AppLoading
+				title="Init Gitlab environment"
+				message="Now we query the groups, users and projects. We ask for your patience..."
+			/>
 		{:then}
-			XXX
+			<AppMrList bind:this={appMrList} />
 		{:catch error}
 			<AppError
 				message={(error && error.cause && error.cause.description) ||

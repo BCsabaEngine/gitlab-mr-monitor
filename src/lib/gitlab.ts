@@ -25,9 +25,10 @@ export const reloadInitial = () => {
 
 export const getMrs = async () => {
 	return await getGitlabClient().MergeRequests.all({
-		/*projectId: 852,*/ state: 'opened',
-		groupId: 45,
-		createdAfter: '2024/02/01'
+		projectId: 852,
+		state: 'opened',
+		//groupId: 45,
+		createdAfter: '2024/01/01'
 	});
 };
 
