@@ -1,0 +1,15 @@
+diff --git a/node_modules/svelte-loading-spinners/package.json b/node_modules/svelte-loading-spinners/package.json
+index de5a320..2bd6f25 100644
+--- a/node_modules/svelte-loading-spinners/package.json
++++ b/node_modules/svelte-loading-spinners/package.json
+@@ -48,7 +48,9 @@
+     "./DoubleBounce.svelte": "./DoubleBounce.svelte",
+     "./Firework.svelte": "./Firework.svelte",
+     "./GoogleSpin.svelte": "./GoogleSpin.svelte",
+-    ".": "./index.js",
++    ".": {
++      "svelte": "./index.js"
++    },
+     "./Jellyfish.svelte": "./Jellyfish.svelte",
+     "./Jumper.svelte": "./Jumper.svelte",
+     "./Moon.svelte": "./Moon.svelte",

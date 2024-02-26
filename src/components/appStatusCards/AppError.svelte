@@ -1,6 +1,8 @@
 <script lang="ts">
 	import { Button, Card } from 'flowbite-svelte';
 
+	import { openConfiguration } from '$lib/openConfiguration';
+
 	export let message: string;
 </script>
 
@@ -14,7 +16,7 @@
 				{message}
 			</p>
 			<br />
-			<Button color="red">Open settings</Button>
+			<Button color="red" on:click={() => openConfiguration()}>Open settings</Button>
 		</center>
 	</Card>
 </div>

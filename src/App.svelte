@@ -6,9 +6,8 @@
 	import { onMount } from 'svelte';
 
 	import AppConfigMissing from '$components/appStatusCards/AppConfigMissing.svelte';
-	import { glInitial } from '$lib/gitlab/initial';
-	import { glUsers } from '$lib/gitlab/users';
-	import { configurationMissing } from '$stores/configStore';
+	import { glInitial } from '$lib/gitlab';
+	import { configurationMissing, configurationStore } from '$stores/configStore';
 	import { modalStore } from '$stores/modalStore';
 
 	import AppNavigation from './AppNavigation.svelte';
@@ -16,22 +15,24 @@
 	import AppLoading from './components/appStatusCards/AppLoading.svelte';
 
 	onMount(async () => {
-		const p = await glInitial;
-		const u = await glUsers;
+		//const p = await glInitial;
+		//const u = await glUsers;
 	});
 </script>
 
 <AppNavigation />
-{#if $configurationMissing}
-	<AppConfigMissing />
-{:else}
-	{#await glInitial}
-		<AppLoading />
-	{:then}
-		XXX
-	{:catch error}
-		<AppError message={error} />
-	{/await}
-{/if}
+{#key $configurationStore}
+	{#if $configurationMissing}
+		<AppConfigMissing />
+	{:else}
+		{#await glInitial}
+			<AppLoading />
+		{:then}
+			XXX
+		{:catch error}
+			<AppError message={error.cause.description || error} />
+		{/await}
+	{/if}
+{/key}
 
 <ModalPortal store={modalStore} />

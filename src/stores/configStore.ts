@@ -38,3 +38,8 @@ export const configurationMissing = derived(
 	configurationStore,
 	($cfg) => !$cfg.gitlab.host || !$cfg.gitlab.token
 );
+
+export const configurationHash = derived(
+	configurationStore,
+	($cfg) => $cfg.gitlab.host + $cfg.gitlab.token
+);
