@@ -1,0 +1,60 @@
+{
+	"name": "mr-monitor",
+	"version": "1.0.0s",
+	"type": "module",
+	"main": "build/index.js",
+	"engines": {
+		"node": ">=18.0.0",
+		"npm": ">=10.0.0"
+	},
+	"scripts": {
+		"dev": "vite dev --host",
+		"build": "vite build",
+		"preview": "vite preview",
+		"ts:check": "svelte-check --tsconfig ./tsconfig.json",
+		"format:check": "prettier --check .",
+		"format:fix": "prettier --write .",
+		"lint:check": "eslint .",
+		"lint:fix": "eslint --fix .",
+		"all": "npm run format:fix && npm run lint:fix && npm run ts:check && npm run build"
+	},
+	"devDependencies": {
+		"@rollup/plugin-swc": "^0.3.0",
+		"@sveltejs/vite-plugin-svelte": "^3.0.2",
+		"@tsconfig/svelte": "^5.0.2",
+		"@types/three": "^0.161.2",
+		"@typescript-eslint/eslint-plugin": "^7.0.2",
+		"@typescript-eslint/parser": "^7.0.2",
+		"autoprefixer": "^10.4.17",
+		"eslint": "^8.57.0",
+		"eslint-config-prettier": "^9.1.0",
+		"eslint-plugin-simple-import-sort": "^12.0.0",
+		"eslint-plugin-sonarjs": "^0.24.0",
+		"eslint-plugin-svelte": "^2.35.1",
+		"eslint-plugin-tailwindcss": "^3.14.3",
+		"eslint-plugin-unicorn": "^51.0.1",
+		"flowbite": "^2.3.0",
+		"flowbite-svelte": "^0.44.24",
+		"flowbite-svelte-icons": "^1.4.0",
+		"postcss": "^8.4.35",
+		"postcss-load-config": "^5.0.3",
+		"prettier": "^3.2.5",
+		"prettier-plugin-svelte": "^3.2.1",
+		"svelte": "^4.2.12",
+		"svelte-check": "^3.6.4",
+		"svelte-preprocess": "^5.1.3",
+		"tailwindcss": "^3.4.1",
+		"tslib": "^2.6.2",
+		"typescript": "^5.3.3",
+		"vite": "^5.1.4",
+		"vite-plugin-tailwind-purgecss": "^0.2.0"
+	},
+	"dependencies": {
+		"@gitbeaker/rest": "^39.34.3",
+		"@svelte-put/modal": "^1.0.7",
+		"@svelte-put/shortcut": "^3.1.0",
+		"svelte-loading-spinners": "^0.3.4",
+		"svelte-persisted-store": "^0.9.1",
+		"zod": "^3.22.4"
+	}
+}
