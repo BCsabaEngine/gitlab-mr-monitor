@@ -25,6 +25,7 @@
 		cause: {
 			description: string;
 		};
+		message: string;
 	};
 
 	let badgeErrorDisplay: BadgeAutohide;
@@ -34,8 +35,12 @@
 		try {
 			await checkGitlabConnection(configuration.gitlab.host, configuration.gitlab.token);
 			badgeErrorDisplay.show('Connection OK', false);
-		} catch (error: unknown) {
-			badgeErrorDisplay.show((error as GitlabApiError).cause.description, true);
+		} catch (error_: unknown) {
+			const error = error_ as GitlabApiError;
+			badgeErrorDisplay.show(
+				(error && error.cause && error.cause.description) || (error && error.message),
+				true
+			);
 		} finally {
 			checkConnectionButtonDisabled = false;
 		}

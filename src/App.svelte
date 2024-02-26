@@ -30,7 +30,11 @@
 		{:then}
 			XXX
 		{:catch error}
-			<AppError message={error.cause.description || error} />
+			<AppError
+				message={(error && error.cause && error.cause.description) ||
+					(error && error.message) ||
+					error}
+			/>
 		{/await}
 	{/if}
 {/key}
