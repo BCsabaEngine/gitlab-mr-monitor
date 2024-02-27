@@ -13,11 +13,11 @@
 	import { configurationMissing, configurationStore } from '$stores/configStore';
 	import { modalStore } from '$stores/modalStore';
 
-	import AppMrList from './AppMrList.svelte';
 	import AppError from './components/appStatusCards/AppError.svelte';
 	import AppLoading from './components/appStatusCards/AppLoading.svelte';
+	import MrList from './components/MrList.svelte';
 
-	let appMrList: AppMrList;
+	let appMrList: MrList;
 
 	let refreshButtonDisabled: boolean = false;
 	const refreshMrList = async (background: boolean) => {
@@ -32,9 +32,7 @@
 
 <svelte:window
 	use:shortcut={{
-		trigger: [
-			{ key: 'r', modifier: [], callback: () => refreshMrList(false), preventDefault: true }
-		]
+		trigger: [{ key: 'r', modifier: [], callback: () => refreshMrList(true), preventDefault: true }]
 	}}
 />
 
@@ -48,7 +46,7 @@
 		<NavUl>
 			{#if !$configurationMissing}
 				<Toggle>Drafts</Toggle>
-				<Button size="md" disabled={refreshButtonDisabled} on:click={() => refreshMrList(true)}
+				<Button size="md" disabled={refreshButtonDisabled} on:click={() => refreshMrList(false)}
 					><RefreshOutline class="mr-1" />Refresh <Kbd class="ml-2 px-2">R</Kbd></Button
 				>
 			{/if}
@@ -69,7 +67,7 @@
 				message="Now we query the groups, users and projects. We ask for your patience..."
 			/>
 		{:then}
-			<AppMrList bind:this={appMrList} />
+			<MrList bind:this={appMrList} />
 		{:catch error}
 			<AppError
 				message={(error && error.cause && error.cause.description) ||
