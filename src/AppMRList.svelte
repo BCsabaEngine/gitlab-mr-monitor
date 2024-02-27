@@ -6,17 +6,17 @@
 	import { getMrs } from '$lib/gitlab';
 
 	let mrs: Promise<MergeRequestSchemaWithBasicLabels[]>;
-	export const refresh = () => {
-		mrs = getMrs();
+	export const refresh = async (background: boolean) => {
+		mrs = background ? Promise.resolve(await getMrs()) : getMrs();
 	};
 	onMount(() => {
-		refresh();
+		refresh(false);
 	});
 </script>
 
 {#await mrs}
 	<AppLoading
-		lazyMs={750}
+		lazyMs={0}
 		title="Pending MRs"
 		message="A few moments and we will see the merge requests..."
 	/>
@@ -25,5 +25,6 @@
 		{#each mrs as mritem}
 			<div class="ml-2 mt-1">{mritem.title}</div>
 		{/each}
+		{Date.now()}
 	{/if}
 {/await}
