@@ -33,13 +33,21 @@
 	const checkConnection = async () => {
 		checkConnectionButtonDisabled = true;
 		try {
-			await checkGitlabConnection(configuration.gitlab.host, configuration.gitlab.token);
-			badgeErrorDisplay.show('Connection OK', false);
+			const checkConnectionResult = await checkGitlabConnection(
+				configuration.gitlab.host,
+				configuration.gitlab.token
+			);
+			badgeErrorDisplay.show(
+				`It's OK (${checkConnectionResult.time}ms)! You are ${checkConnectionResult.user.name} (${checkConnectionResult.user.email}) and work on Gitlab${checkConnectionResult.server.enterprise ? ' enterprise' : ''} server v${checkConnectionResult.server.version}.`,
+				false,
+				3000
+			);
 		} catch (error_: unknown) {
 			const error = error_ as GitlabApiError;
 			badgeErrorDisplay.show(
 				(error && error.cause && error.cause.description) || (error && error.message),
-				true
+				true,
+				3000
 			);
 		} finally {
 			checkConnectionButtonDisabled = false;
@@ -54,7 +62,7 @@
 	<h3 class="mb-10 text-lg font-normal text-gray-500 dark:text-gray-400">Configuration</h3>
 	<Tabs style="underline" contentClass="p-4 rounded-lg mt-4">
 		<TabItem open title="Gitlab access">
-			<div class="flex flex-col space-y-6">
+			<div class="grid gap-6 mb-6 md:grid-cols-2">
 				<div>
 					<Label for="host" class="mb-2">Host</Label>
 					<Input
@@ -62,7 +70,7 @@
 						bind:value={configuration.gitlab.host}
 						placeholder="https://gitlab.com/"
 					/>
-					<Helper class="text-sm text-gray-600 mt-1 ml-4"
+					<Helper class="text-xs text-gray-600 mt-1 ml-2"
 						>You can set the public Gitlab or the URL of a self-installed instance</Helper
 					>
 				</div>
@@ -73,20 +81,20 @@
 						bind:value={configuration.gitlab.token}
 						placeholder="glpat-xxxxxxxxxxxxxxxxxxxx"
 					/>
-					<Helper class="text-sm text-gray-600 mt-1 ml-4"
+					<Helper class="text-xs text-gray-600 mt-1 ml-2"
 						>Enter your private access token, which can be the same one you write in npmrc/yarnrc</Helper
 					>
 				</div>
 			</div>
-			<br />
 			<Button
 				on:click={checkConnection}
 				outline
 				disabled={checkConnectionButtonDisabled}
 				color="green"
-				class="float-rightx mr-2"><CheckOutline class="mr-2" /> Check connection</Button
+				class="float-rightx mr-2 mt-2"><CheckOutline class="mr-2" /> Check connection</Button
 			>
-			<BadgeAutohide bind:this={badgeErrorDisplay} />
+			<br />
+			<BadgeAutohide bind:this={badgeErrorDisplay} class="mt-2" />
 		</TabItem>
 		<TabItem title="Dashboard">
 			<p class="text-sm text-gray-500 dark:text-gray-400">

@@ -1,9 +1,19 @@
 import { Gitlab } from '@gitbeaker/rest';
+import pTime from 'p-time';
 
 import { getConfigurationStoreValue } from '$stores/configStore';
 
-export const checkGitlabConnection = (host: string, token: string) =>
-	new Gitlab({ host, token }).Groups.all();
+export const checkGitlabConnection = async (host: string, token: string) => {
+	const cli = new Gitlab({ host, token });
+	const p1 = pTime(cli.Users.showCurrentUser.bind(cli))();
+	const p2 = pTime(cli.Metadata.show.bind(cli))();
+	await Promise.all([p1, p2]);
+	return {
+		user: await p1,
+		server: await p2,
+		time: Math.max(p1.time || 0, p2.time || 0)
+	};
+};
 
 export const getGitlabClient = () => {
 	const config = getConfigurationStoreValue();

@@ -5,6 +5,9 @@
 	let _text: string;
 	let _iserror: boolean;
 
+	let aClass = '';
+	export { aClass as class };
+
 	export const show = (text: string, isError: boolean, timeout = 2500) => {
 		_text = text;
 		_iserror = isError;
@@ -15,5 +18,5 @@
 </script>
 
 {#if visible}
-	<Badge border large color={_iserror ? 'red' : 'green'}>{_text}</Badge>
+	<Badge class={aClass} border large color={_iserror ? 'red' : 'green'}>{_text}</Badge>
 {/if}
