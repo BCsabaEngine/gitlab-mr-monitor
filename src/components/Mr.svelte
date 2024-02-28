@@ -1,13 +1,13 @@
 <script lang="ts">
 	import type { MergeRequestSchemaWithBasicLabels } from '@gitbeaker/rest';
-	import { Badge, Card } from 'flowbite-svelte';
+	import { Badge, Card, Tooltip } from 'flowbite-svelte';
 	import { Toolbar, ToolbarButton, ToolbarGroup } from 'flowbite-svelte';
 	import { EnvelopeOutline, ImageOutline } from 'flowbite-svelte-icons';
 
 	export let mr: MergeRequestSchemaWithBasicLabels;
 </script>
 
-<Card class="max-w-full min-h-40 flex flex-col sm:p-0 sm:px-6 sm:pb-6">
+<Card class="max-w-full min-h-32 max-h-52 flex flex-col sm:p-0 sm:px-6 sm:pb-6">
 	<Toolbar class="px-0 pb-0">
 		<ToolbarGroup>
 			<ToolbarButton class="pl-0"><Badge>{mr.id}</Badge></ToolbarButton>
@@ -22,8 +22,17 @@
 		{mr.title}
 	</h5>
 	<p
-		class="mt-3 text-sm font-normal text-gray-700 dark:text-gray-400 leading-tight whitespace-pre-line"
+		id={`description-${mr.id}`}
+		class="my-2 truncate cursor-pointer text-sm font-normal text-gray-700 dark:text-gray-400 leading-tight whitespace-pre-line"
 	>
 		{mr.description}
 	</p>
+	<Tooltip
+		trigger="click"
+		triggeredBy={`#description-${mr.id}`}
+		type="light"
+		arrow={false}
+		color="green"
+		class="whitespace-pre-line">{mr.description}</Tooltip
+	>
 </Card>

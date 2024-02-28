@@ -25,13 +25,13 @@
 	/>
 {:then mrs}
 	{#if mrs && mrs.length > 0}
-		<div class="container mx-auto">
+		<div class="container mx-auto mb-4">
 			<h4
 				class="mb-2 ml-2 text-lg flex items-center font-bold tracking-tight text-gray-900 dark:text-white"
 			>
 				<Indicator color="yellow" class="mr-2" />Foundation / BMS / FE
 			</h4>
-			<div class="mt-2 grid grid-cols-3 gap-4">
+			<div class="mt-2 grid md:grid-cols-2 lg:grid-cols-3 gap-4">
 				{#each mrs as mr (mr.id)}
 					<Mr {mr} />
 				{/each}

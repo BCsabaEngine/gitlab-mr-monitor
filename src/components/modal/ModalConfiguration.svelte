@@ -7,6 +7,7 @@
 	import AutoFocus from '$components/modal/util/AutoFocus.svelte';
 	import { checkGitlabConnection } from '$lib/gitlab';
 	import type { Configuration } from '$types/Configuration';
+	import { GitlabAccess } from '$types/GitlabAccess';
 
 	const dispatch = createEventDispatcher<{
 		resolve: {
@@ -29,9 +30,9 @@
 	};
 
 	let badgeErrorDisplay: BadgeAutohide;
-	let checkConnectionButtonDisabled: boolean = false;
+	let checkConnectionInProgress: boolean = false;
 	const checkConnection = async () => {
-		checkConnectionButtonDisabled = true;
+		checkConnectionInProgress = true;
 		try {
 			const checkConnectionResult = await checkGitlabConnection(
 				configuration.gitlab.host,
@@ -50,9 +51,11 @@
 				3000
 			);
 		} finally {
-			checkConnectionButtonDisabled = false;
+			checkConnectionInProgress = false;
 		}
 	};
+	let checkConnectionButtonEnabled: boolean = false;
+	$: checkConnectionButtonEnabled = GitlabAccess.safeParse(configuration.gitlab).success;
 
 	export let configuration: Configuration;
 </script>
@@ -89,7 +92,7 @@
 			<Button
 				on:click={checkConnection}
 				outline
-				disabled={checkConnectionButtonDisabled}
+				disabled={checkConnectionInProgress || !checkConnectionButtonEnabled}
 				color="green"
 				class="float-rightx mr-2 mt-2"><CheckOutline class="mr-2" /> Check connection</Button
 			>
@@ -105,7 +108,12 @@
 		</TabItem>
 	</Tabs>
 	<div class="absolute right-4 bottom-6">
-		<Button on:click={() => resolve(true)} color="green" class="me-2">OK</Button>
+		<Button
+			on:click={() => resolve(true)}
+			disabled={!checkConnectionButtonEnabled}
+			color="green"
+			class="me-2">OK</Button
+		>
 		<Button on:click={() => resolve(false)} color="alternative" class="me-2">Cancel</Button>
 	</div>
 </Modal>

@@ -23,14 +23,13 @@ export const getGitlabClient = () => {
 	});
 };
 
-export let glGroups = getGitlabClient().Groups.all({ showExpanded: false });
-export let glUsers = getGitlabClient().Users.all({ active: true, showExpanded: false });
-export let glInitial = Promise.all([glUsers, glGroups]);
+//export const glGroups = getGitlabClient().Groups.all({ showExpanded: false });
+//export const glUsers = getGitlabClient().Users.all({ active: true, showExpanded: false });
+
+export let glCurrentUser = getGitlabClient().Users.showCurrentUser({ showExpanded: false });
 
 export const reloadInitial = () => {
-	glGroups = getGitlabClient().Groups.all({ showExpanded: false });
-	glUsers = getGitlabClient().Users.all({ active: true, showExpanded: false });
-	glInitial = Promise.all([glUsers, glGroups]);
+	glCurrentUser = getGitlabClient().Users.showCurrentUser({ showExpanded: false });
 };
 
 export const getMrs = async () => {

@@ -4,11 +4,20 @@
 
 	import { ModalPortal } from '@svelte-put/modal';
 	import { shortcut } from '@svelte-put/shortcut';
-	import { Button, Kbd, Navbar, NavBrand, NavHamburger, NavUl, Toggle } from 'flowbite-svelte';
+	import {
+		Avatar,
+		Button,
+		Kbd,
+		Navbar,
+		NavBrand,
+		NavHamburger,
+		NavUl,
+		Tooltip
+	} from 'flowbite-svelte';
 	import { CogOutline, RefreshOutline } from 'flowbite-svelte-icons';
 
 	import AppConfigMissing from '$components/appStatusCards/AppConfigMissing.svelte';
-	import { glInitial } from '$lib/gitlab';
+	import { glCurrentUser } from '$lib/gitlab';
 	import { openConfiguration } from '$lib/openConfiguration';
 	import { configurationMissing, configurationStore } from '$stores/configStore';
 	import { modalStore } from '$stores/modalStore';
@@ -42,18 +51,37 @@
 			<img src="/favicon.png" class="me-3 h-6 sm:h-9" alt="MR monitor" />
 			<span class="self-center whitespace-nowrap text-xl font-semibold">MR monitor</span>
 		</NavBrand>
-		<NavHamburger />
-		<NavUl>
-			{#if !$configurationMissing}
-				<Toggle>Drafts</Toggle>
-				<Button size="md" disabled={refreshButtonDisabled} on:click={() => refreshMrList(false)}
-					><RefreshOutline class="mr-1" />Refresh <Kbd class="ml-2 px-2">R</Kbd></Button
+		<div class="flex items-center md:order-2">
+			<NavUl>
+				{#if !$configurationMissing}
+					<Button size="md" disabled={refreshButtonDisabled} on:click={() => refreshMrList(false)}
+						><RefreshOutline class="mr-1" />Refresh <Kbd class="ml-2 px-2">R</Kbd></Button
+					>
+				{/if}
+				<Button color="alternative" class="flex" size="md" on:click={() => openConfiguration()}
+					><CogOutline class="mr-1" />Setting</Button
 				>
+			</NavUl>
+			{#if !$configurationMissing}
+				{#await glCurrentUser}
+					<Avatar id="avatar-menu" />
+				{:then glCurrentUser}
+					<Avatar id="avatar-menu" src={glCurrentUser.avatar_url} />
+					<Tooltip
+						type="light"
+						arrow={false}
+						placement="bottom"
+						color="green"
+						class="whitespace-pre-line"
+					>
+						<b>{glCurrentUser.name}</b>
+						<br />
+						{glCurrentUser.email}</Tooltip
+					>
+				{/await}
 			{/if}
-			<Button color="alternative" class="flex" size="md" on:click={() => openConfiguration()}
-				><CogOutline class="mr-1" />Setting</Button
-			>
-		</NavUl>
+			<NavHamburger class1="w-full md:flex md:w-auto md:order-1" />
+		</div>
 	</NavContainer>
 </Navbar>
 
@@ -61,10 +89,10 @@
 	{#if $configurationMissing}
 		<AppConfigMissing />
 	{:else}
-		{#await glInitial}
+		{#await glCurrentUser}
 			<AppLoading
 				title="Init Gitlab environment"
-				message="Now we query the groups, users and projects. We ask for your patience..."
+				message="Now we query your identity. We ask for your patience..."
 			/>
 		{:then}
 			<MrList bind:this={appMrList} />
