@@ -1,8 +1,8 @@
 import { createModalStore } from '@svelte-put/modal';
 
-import ModalConfiguration from '$components/modal/ModalConfiguration.svelte';
 import ModalConfirm from '$components/modal/ModalConfirm.svelte';
 import ModalNameEdit from '$components/modal/ModalNameEdit.svelte';
+import ModalSettings from '$components/modal/ModalSettings.svelte';
 import type { Configuration } from '$types/Configuration';
 
 export const modalStore = createModalStore();
@@ -34,7 +34,7 @@ export const showModalConfiguration = async (
 ): Promise<{ confirmed: boolean; configuration: Configuration }> =>
 	await modalStore
 		.push({
-			component: ModalConfiguration,
+			component: ModalSettings,
 			props: {
 				configuration
 			}

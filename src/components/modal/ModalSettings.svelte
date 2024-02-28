@@ -62,7 +62,7 @@
 
 <Modal open={true} size="lg" dismissable={false} bodyClass="space-y-0 min-h-screen">
 	<AutoFocus />
-	<h3 class="mb-10 text-lg font-normal text-gray-500 dark:text-gray-400">Configuration</h3>
+	<h3 class="mb-10 text-lg font-normal text-gray-500 dark:text-gray-400">Settings</h3>
 	<Tabs style="underline" contentClass="p-4 rounded-lg mt-4">
 		<TabItem open title="Gitlab access">
 			<div class="grid gap-6 mb-6 md:grid-cols-2">

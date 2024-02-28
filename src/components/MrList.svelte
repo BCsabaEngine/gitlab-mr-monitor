@@ -1,16 +1,21 @@
 <script lang="ts">
 	import type { MergeRequestSchemaWithBasicLabels } from '@gitbeaker/rest';
 	import { Indicator } from 'flowbite-svelte';
-	import { onMount } from 'svelte';
+	import { createEventDispatcher, onMount } from 'svelte';
 
 	import AppLoading from '$components/appStatusCards/AppLoading.svelte';
 	import { getMrs } from '$lib/gitlab';
 
 	import Mr from './Mr.svelte';
+	const dispatch = createEventDispatcher<{
+		count: number;
+	}>();
 
 	let mrs: Promise<MergeRequestSchemaWithBasicLabels[]>;
-	export const refresh = async (background: boolean) =>
-		(mrs = background ? Promise.resolve(await getMrs()) : getMrs());
+	export const refresh = async (background: boolean) => {
+		mrs = background ? Promise.resolve(await getMrs()) : getMrs();
+		mrs.then((value) => dispatch('count', value.length));
+	};
 
 	onMount(() => {
 		refresh(false);

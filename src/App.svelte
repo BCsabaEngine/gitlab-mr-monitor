@@ -6,15 +6,15 @@
 	import { shortcut } from '@svelte-put/shortcut';
 	import {
 		Avatar,
+		Badge,
 		Button,
 		Kbd,
 		Navbar,
-		NavBrand,
 		NavHamburger,
 		NavUl,
 		Tooltip
 	} from 'flowbite-svelte';
-	import { CogOutline, RefreshOutline } from 'flowbite-svelte-icons';
+	import { CogOutline, ExclamationCircleOutline, RefreshOutline } from 'flowbite-svelte-icons';
 
 	import AppConfigMissing from '$components/appStatusCards/AppConfigMissing.svelte';
 	import { glCurrentUser } from '$lib/gitlab';
@@ -27,6 +27,7 @@
 	import MrList from './components/MrList.svelte';
 
 	let appMrList: MrList;
+	let countMr: number = 0;
 
 	let refreshButtonDisabled: boolean = false;
 	const refreshMrList = async (background: boolean) => {
@@ -47,11 +48,19 @@
 
 <Navbar let:NavContainer color="none">
 	<NavContainer class="border px-5 py-2 lg bg-white dark:bg-gray-600">
-		<NavBrand href="/">
+		<div class="flex items-left md:order-2">
 			<img src="/favicon.png" class="me-3 h-6 sm:h-9" alt="MR monitor" />
 			<span class="self-center whitespace-nowrap text-xl font-semibold">MR monitor</span>
-		</NavBrand>
-		<div class="flex items-center md:order-2">
+			{#if countMr > 0}
+				<Badge large border class="ml-4" color={countMr > 100 ? 'red' : 'green'}>
+					{#if countMr > 10}
+						<ExclamationCircleOutline class="mr-2" />
+					{/if}
+					<span class="text-lg">{countMr}</span></Badge
+				>
+			{/if}
+		</div>
+		<div class="flex items-center md:order-3">
 			<NavUl>
 				{#if !$configurationMissing}
 					<Button size="md" disabled={refreshButtonDisabled} on:click={() => refreshMrList(false)}
@@ -59,7 +68,7 @@
 					>
 				{/if}
 				<Button color="alternative" class="flex" size="md" on:click={() => openConfiguration()}
-					><CogOutline class="mr-1" />Setting</Button
+					><CogOutline class="mr-1" />Settings</Button
 				>
 			</NavUl>
 			{#if !$configurationMissing}
@@ -95,7 +104,7 @@
 				message="Now we query your identity. We ask for your patience..."
 			/>
 		{:then}
-			<MrList bind:this={appMrList} />
+			<MrList bind:this={appMrList} on:count={(count) => (countMr = count.detail)} />
 		{:catch error}
 			<AppError
 				message={(error && error.cause && error.cause.description) ||
