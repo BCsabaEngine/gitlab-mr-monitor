@@ -1,7 +1,7 @@
 <script>
 	import { Button } from 'flowbite-svelte';
 
-	import { openConfiguration } from '$lib/openConfiguration';
+	import { openConfiguration } from '../../common/openConfiguration';
 </script>
 
 <div class="flex justify-center mt-9">

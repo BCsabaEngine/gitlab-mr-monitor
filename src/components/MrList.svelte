@@ -1,20 +1,26 @@
 <script lang="ts">
 	import type { MergeRequestSchemaWithBasicLabels } from '@gitbeaker/rest';
-	import { Indicator } from 'flowbite-svelte';
 	import { createEventDispatcher, onMount } from 'svelte';
 
 	import AppLoading from '$components/appStatusCards/AppLoading.svelte';
-	import { getMrs } from '$lib/gitlab';
+	import { dummyScopes, getMrs } from '$lib/gitlab';
+	import { type MergeRequest, postProcess } from '$lib/mr';
 
+	//import { configurationStore, getConfigurationStoreValue } from '$stores/configStore';
 	import Mr from './Mr.svelte';
 	const dispatch = createEventDispatcher<{
 		count: number;
 	}>();
 
-	let mrs: Promise<MergeRequestSchemaWithBasicLabels[]>;
+	let mrPromises: Promise<MergeRequestSchemaWithBasicLabels[][]>;
+	let mrs: MergeRequest[] = [];
 	export const refresh = async (background: boolean) => {
-		mrs = background ? Promise.resolve(await getMrs()) : getMrs();
-		mrs.then((value) => dispatch('count', value.length));
+		mrPromises = background ? Promise.resolve(await getMrs()) : getMrs();
+		mrPromises.then(async (value) => {
+			//mrs = postProcess(getConfigurationStoreValue().scopes, value);
+			mrs = await postProcess(dummyScopes, value);
+			dispatch('count', mrs.length);
+		});
 	};
 
 	onMount(() => {
@@ -22,20 +28,15 @@
 	});
 </script>
 
-{#await mrs}
+{#await mrPromises}
 	<AppLoading
 		lazyMs={750}
 		title="Pending MRs"
 		message="A few moments and we will see the merge requests..."
 	/>
-{:then mrs}
+{:then}
 	{#if mrs && mrs.length > 0}
 		<div class="container mx-auto mb-4">
-			<h4
-				class="mb-2 ml-2 text-lg flex items-center font-bold tracking-tight text-gray-900 dark:text-white"
-			>
-				<Indicator color="yellow" class="mr-2" />Foundation / BMS / FE
-			</h4>
 			<div class="mt-2 grid md:grid-cols-2 lg:grid-cols-3 gap-4">
 				{#each mrs as mr (mr.id)}
 					<Mr {mr} />

@@ -1,17 +1,20 @@
 <script lang="ts">
-	import type { MergeRequestSchemaWithBasicLabels } from '@gitbeaker/rest';
-	import { Badge, Card, Tooltip } from 'flowbite-svelte';
+	import { Card, Tooltip } from 'flowbite-svelte';
 	import { Toolbar, ToolbarButton, ToolbarGroup } from 'flowbite-svelte';
 	import { EnvelopeOutline, ImageOutline } from 'flowbite-svelte-icons';
 
-	export let mr: MergeRequestSchemaWithBasicLabels;
+	import type { MergeRequest } from '$lib/mr';
+
+	export let mr: MergeRequest;
 </script>
 
 <Card class="max-w-full min-h-32 max-h-52 flex flex-col sm:p-0 sm:px-6 sm:pb-6">
 	<Toolbar class="px-0 pb-0">
-		<ToolbarGroup>
-			<ToolbarButton class="pl-0"><Badge>{mr.id}</Badge></ToolbarButton>
-		</ToolbarGroup>
+		{#await mr.project}
+			...
+		{:then project}
+			{project.name}
+		{/await}
 		<ToolbarGroup slot="end">
 			<ToolbarButton>Approve</ToolbarButton>
 			<ToolbarButton><EnvelopeOutline class="w-6 h-6" /></ToolbarButton>

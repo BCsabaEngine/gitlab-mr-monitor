@@ -8,7 +8,8 @@ const emptyConfiguration: Configuration = {
 		host: '',
 		token: ''
 	},
-	skippedUsers: []
+	ignoredUsers: [],
+	scopes: []
 };
 
 export const configurationJsonSerializer = {

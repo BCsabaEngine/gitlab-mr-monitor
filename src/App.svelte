@@ -18,10 +18,10 @@
 
 	import AppConfigMissing from '$components/appStatusCards/AppConfigMissing.svelte';
 	import { glCurrentUser } from '$lib/gitlab';
-	import { openConfiguration } from '$lib/openConfiguration';
 	import { configurationMissing, configurationStore } from '$stores/configStore';
 	import { modalStore } from '$stores/modalStore';
 
+	import { openConfiguration } from './common/openConfiguration';
 	import AppError from './components/appStatusCards/AppError.svelte';
 	import AppLoading from './components/appStatusCards/AppLoading.svelte';
 	import MrList from './components/MrList.svelte';

@@ -55,6 +55,7 @@
 		"@gitbeaker/rest": "^39.34.3",
 		"@svelte-put/modal": "^1.0.7",
 		"@svelte-put/shortcut": "^3.1.0",
+		"p-map": "^7.0.1",
 		"p-time": "^4.0.0",
 		"svelte-loading-spinners": "^0.3.4",
 		"svelte-persisted-store": "^0.9.1",

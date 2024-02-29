@@ -1,7 +1,7 @@
 import { getConfigurationStoreValue, setConfigurationStoreValue } from '$stores/configStore';
 import { showModalConfiguration } from '$stores/modalStore';
 
-import { reloadInitial as reloadInitialGitlabData } from './gitlab';
+import { reloadInitial as reloadInitialGitlabData } from '../lib/gitlab';
 
 export const openConfiguration = async () => {
 	const config = structuredClone(getConfigurationStoreValue());

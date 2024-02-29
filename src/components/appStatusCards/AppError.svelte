@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { Button } from 'flowbite-svelte';
 
-	import { openConfiguration } from '$lib/openConfiguration';
+	import { openConfiguration } from '../../common/openConfiguration';
 
 	export let message: string;
 </script>
