@@ -82,7 +82,7 @@ export const dummyScopes: Scope[] = [
 
 const getScopeMr = async (scope: Scope) => {
 	switch (scope.mode) {
-		case 'project': {
+		case 'project':
 			return getGitlabClient().MergeRequests.all({
 				projectId: scope.project,
 				state: 'opened'
@@ -90,19 +90,16 @@ const getScopeMr = async (scope: Scope) => {
 				//groupId: 45,
 				//createdAfter: '2024/01/01'
 			});
-		}
-		case 'group': {
+		case 'group':
 			return getGitlabClient().MergeRequests.all({
 				groupId: scope.group,
 				state: 'opened'
 			});
-		}
 		//My MRs
-		default: {
+		default:
 			return getGitlabClient().MergeRequests.all({
 				state: 'opened'
 			});
-		}
 	}
 };
 
@@ -111,16 +108,6 @@ export const getMrs = async (): Promise<MergeRequestSchemaWithBasicLabels[][]> =
 
 const projectCache: Map<number, Promise<ProjectSchema>> = new Map<number, Promise<ProjectSchema>>();
 export const getProject = async (id: number): Promise<ProjectSchema> => {
-	if (!projectCache.has(id)) {
-		const project = new Promise<ProjectSchema>((resolve) =>
-			setTimeout(
-				() => {
-					resolve(getGitlabClient().Projects.show(id));
-				},
-				Math.random() * 1500 + 500
-			)
-		);
-		projectCache.set(id, project);
-	}
+	if (!projectCache.has(id)) projectCache.set(id, getGitlabClient().Projects.show(id));
 	return projectCache.get(id)!;
 };

@@ -73,9 +73,9 @@
 			</NavUl>
 			{#if !$configurationMissing}
 				{#await glCurrentUser}
-					<Avatar id="avatar-menu" />
+					<Avatar id="avatar-currentuser" />
 				{:then glCurrentUser}
-					<Avatar id="avatar-menu" src={glCurrentUser.avatar_url} />
+					<Avatar id="avatar-currentuser" src={glCurrentUser.avatar_url} />
 					<Tooltip
 						type="light"
 						arrow={false}
