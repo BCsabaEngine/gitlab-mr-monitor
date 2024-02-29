@@ -47,53 +47,59 @@ export const dummyScopes: Scope[] = [
 		mode: 'project',
 		project: '805',
 		alert: false,
-		days: 0,
+		days: 3,
 		draft: false
 	},
 	{
 		mode: 'project',
 		project: '852',
 		alert: false,
-		days: 0,
+		days: 3,
 		draft: false
 	},
 	{
 		mode: 'project',
 		project: '47',
 		alert: false,
-		days: 0,
+		days: 3,
 		draft: false
 	},
 	{
 		mode: 'project',
 		project: '802',
 		alert: false,
-		days: 0,
+		days: 3,
 		draft: false
 	},
 	{
 		mode: 'project',
 		project: '802',
 		alert: false,
-		days: 0,
+		days: 3,
 		draft: false
 	}
 ];
 
 const getScopeMr = async (scope: Scope) => {
+	let updatedAfter: string | undefined;
+	if ('days' in scope && scope.days > 0) {
+		const today = new Date();
+		today.setDate(today.getDate() - scope.days);
+		updatedAfter = today.toISOString();
+	}
+
 	switch (scope.mode) {
 		case 'project':
 			return getGitlabClient().MergeRequests.all({
 				projectId: scope.project,
-				state: 'opened'
-				//projectId: 852,
-				//groupId: 45,
-				//createdAfter: '2024/01/01'
+				state: 'opened',
+				updatedAfter
 			});
 		case 'group':
 			return getGitlabClient().MergeRequests.all({
 				groupId: scope.group,
-				state: 'opened'
+				state: 'opened',
+				updatedAfter
 			});
 		//My MRs
 		default:

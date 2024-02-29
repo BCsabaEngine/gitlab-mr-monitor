@@ -33,26 +33,20 @@ const statusToHuman = (
 		| 'jira_association_missing'
 ): MergeRequestStatusHuman => {
 	switch (status) {
-		case 'blocked_status':
-			return { status: 'Blocked', level: 'warning' };
 		case 'checking':
-			return { status: 'Checking', level: 'warning' };
+			return { status: 'Checking', level: 'none' };
 		case 'broken_status':
 			return { status: 'Broken', level: 'error' };
 		case 'ci_must_pass':
 			return { status: 'CI error', level: 'error' };
 		case 'ci_still_running':
-			return { status: 'CI...', level: 'none' };
+			return { status: 'CI running', level: 'none' };
 		case 'discussions_not_resolved':
 			return { status: 'Discussions', level: 'warning' };
 		case 'mergeable':
 			return { status: 'Mergeable', level: 'success' };
-		case 'not_approved':
-			return { status: 'Need approve', level: 'warning' };
 		case 'policies_denied':
 			return { status: 'Policies', level: 'error' };
-		case 'unchecked':
-			return { status: 'Unchecked', level: 'none' };
 	}
 	return { status: '', level: 'none' };
 };
@@ -78,6 +72,12 @@ export const postProcess = async (
 			});
 		}
 	}
+
+	result.sort((a, b) => {
+		let result = b.project_id - a.project_id;
+		if (result === 0) result = b.iid - a.iid;
+		return result;
+	});
 
 	return result;
 };
