@@ -39,7 +39,7 @@
 				configuration.gitlab.token
 			);
 			badgeErrorDisplay.show(
-				`It's OK (${checkConnectionResult.time}ms)! You are ${checkConnectionResult.user.name} (${checkConnectionResult.user.email}) and work on Gitlab${checkConnectionResult.server.enterprise ? ' enterprise' : ''} server v${checkConnectionResult.server.version}.`,
+				`It's OK! You are ${checkConnectionResult.user.name} (${checkConnectionResult.user.username}) and work on Gitlab${checkConnectionResult.server.enterprise ? ' enterprise' : ''} server v${checkConnectionResult.server.version}.`,
 				false,
 				3000
 			);

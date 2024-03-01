@@ -91,7 +91,7 @@
 						>
 							<b>{glCurrentUser.name}</b>
 							<br />
-							{glCurrentUser.email}
+							{glCurrentUser.username}
 						</Tooltip>
 					{/await}
 				{/if}
