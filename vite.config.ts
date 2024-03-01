@@ -24,7 +24,7 @@ export default defineConfig({
 			plugins: [swc(), purgeCss()]
 		}
 	},
-	base: process.env.NODE_ENV === 'production' ? '/mr-monitor' : '',
+	base: process.env.NODE_ENV === 'production' ? '/gitlab-mr-monitor' : '',
 	resolve: {
 		alias: {
 			$components: path.resolve(__dirname, './src/components'),
@@ -35,6 +35,6 @@ export default defineConfig({
 	},
 	define: {
 		__PKG_VERSION__: `"${package_.version}"`,
-		__BASE_URL__: `"${process.env.NODE_ENV === 'production' ? '/mr-monitor' : ''}"`
+		__BASE_URL__: `"${process.env.NODE_ENV === 'production' ? '/gitlab-mr-monitor' : ''}"`
 	}
 });

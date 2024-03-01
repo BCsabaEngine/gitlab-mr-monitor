@@ -50,7 +50,7 @@
 	<NavContainer class="border px-5 py-2 lg bg-white dark:bg-gray-600">
 		<div class="flex items-left md:order-2">
 			<img src="/favicon.png" class="me-3 h-6 sm:h-9" alt="MR monitor" />
-			<span class="self-center whitespace-nowrap text-xl font-semibold">MR monitor</span>
+			<span class="self-center whitespace-nowrap text-xl font-semibold">Gitlab MR monitor</span>
 			{#if countMr > 0}
 				<Badge large border class="ml-4" color={countMr > 100 ? 'red' : 'green'}>
 					{#if countMr > 10}

@@ -1,21 +1,21 @@
 {
 	"name": "Merge Request monitor",
-	"short_name": "mr-monitor",
-	"scope": "/mr-monitor/",
-	"start_url": "https://segmentcontroller.github.io/mr-monitor/",
+	"short_name": "gitlab-mr-monitor",
+	"scope": "/gitlab-mr-monitor/",
+	"start_url": "https://segmentcontroller.github.io/gitlab-mr-monitor/",
 	"icons": [
 		{
-			"src": "/mr-monitor/gitlab-512.png",
+			"src": "/gitlab-mr-monitor/gitlab-512.png",
 			"sizes": "512x512",
 			"type": "image/png"
 		},
 		{
-			"src": "/mr-monitor/gitlab-256.png",
+			"src": "/gitlab-mr-monitor/gitlab-256.png",
 			"sizes": "256x256",
 			"type": "image/png"
 		},
 		{
-			"src": "/mr-monitor/favicon.png",
+			"src": "/gitlab-mr-monitor/favicon.png",
 			"sizes": "32x32",
 			"type": "image/png"
 		}

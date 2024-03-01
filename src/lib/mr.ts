@@ -1,14 +1,20 @@
 import { type MergeRequestSchemaWithBasicLabels, type ProjectSchema } from '@gitbeaker/rest';
+import dayjs from 'dayjs/esm';
+import relativeTime from 'dayjs/esm/plugin/relativeTime';
 
 import type { Scope } from '$types/Scope';
 
 import { getProject } from './gitlab';
+
+dayjs.extend(relativeTime);
 
 export type LazyProjectSchema = Promise<ProjectSchema>;
 
 export type MergeRequest = MergeRequestSchemaWithBasicLabels & {
 	project: LazyProjectSchema;
 	merge_status_human: MergeRequestStatusHuman;
+	createdFromNow: string;
+	updatedFromNow: string;
 };
 
 export type MergeRequestStatusHuman = {
@@ -68,7 +74,9 @@ export const postProcess = async (
 			result.push({
 				...mr,
 				project: getProject(mr.project_id),
-				merge_status_human: statusToHuman(mr.detailed_merge_status)
+				merge_status_human: statusToHuman(mr.detailed_merge_status),
+				createdFromNow: dayjs().from(dayjs(mr.created_at)),
+				updatedFromNow: dayjs().from(dayjs(mr.updated_at))
 			});
 		}
 	}
