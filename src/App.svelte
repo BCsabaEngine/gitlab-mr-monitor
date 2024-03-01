@@ -8,6 +8,7 @@
 		Avatar,
 		Badge,
 		Button,
+		DarkMode,
 		Kbd,
 		Navbar,
 		NavHamburger,
@@ -45,75 +46,81 @@
 		trigger: [{ key: 'r', modifier: [], callback: () => refreshMrList(true), preventDefault: true }]
 	}}
 />
-
-<Navbar let:NavContainer color="none">
-	<NavContainer class="border px-5 py-2 lg bg-white dark:bg-gray-600">
-		<div class="flex items-left md:order-2">
-			<img src="/favicon.png" class="me-3 h-6 sm:h-9" alt="MR monitor" />
-			<span class="self-center whitespace-nowrap text-xl font-semibold">Gitlab MR monitor</span>
-			{#if countMr > 0}
-				<Badge large border class="ml-4" color={countMr > 100 ? 'red' : 'green'}>
-					{#if countMr > 10}
-						<ExclamationCircleOutline class="mr-2" />
-					{/if}
-					<span class="text-lg">{countMr}</span></Badge
+<div class="bg-gray-200 dark:bg-gray-400">
+	<Navbar let:NavContainer color="none">
+		<NavContainer class="border px-5 py-2 lg bg-white dark:bg-gray-600">
+			<div class="flex items-left md:order-2">
+				<img src="/favicon.png" class="me-3 h-6 sm:h-9" alt="MR monitor" />
+				<span class="self-center whitespace-nowrap text-xl font-semibold dark:text-white"
+					>Gitlab MR monitor</span
 				>
-			{/if}
-		</div>
-		<div class="flex items-center md:order-3">
-			<NavUl>
-				{#if !$configurationMissing}
-					<Button size="md" disabled={refreshButtonDisabled} on:click={() => refreshMrList(false)}
-						><RefreshOutline class="mr-1" />Refresh <Kbd class="ml-2 px-2">R</Kbd></Button
+				{#if countMr > 0}
+					<Badge large border class="ml-4" color={countMr > 100 ? 'red' : 'green'}>
+						{#if countMr > 10}
+							<ExclamationCircleOutline class="mr-2" />
+						{/if}
+						<span class="text-lg">{countMr}</span></Badge
 					>
 				{/if}
-				<Button color="alternative" class="flex" size="md" on:click={() => openConfiguration()}
-					><CogOutline class="mr-1" />Settings</Button
-				>
-			</NavUl>
-			{#if !$configurationMissing}
-				{#await glCurrentUser}
-					<Avatar id="avatar-currentuser" />
-				{:then glCurrentUser}
-					<Avatar id="avatar-currentuser" src={glCurrentUser.avatar_url} />
-					<Tooltip
-						type="light"
-						arrow={false}
-						placement="bottom"
-						color="green"
-						class="whitespace-pre-line"
+			</div>
+			<div class="flex items-center md:order-3">
+				<NavUl>
+					{#if !$configurationMissing}
+						<Button size="md" disabled={refreshButtonDisabled} on:click={() => refreshMrList(false)}
+							><RefreshOutline class="mr-1" />Refresh <Kbd class="ml-2 px-2">R</Kbd></Button
+						>
+					{/if}
+					<Button color="alternative" class="flex" size="md" on:click={() => openConfiguration()}
+						><CogOutline class="mr-1" />Settings</Button
 					>
-						<b>{glCurrentUser.name}</b>
-						<br />
-						{glCurrentUser.email}
-						#{glCurrentUser.id}
-					</Tooltip>
-				{/await}
-			{/if}
-			<NavHamburger class1="w-full md:flex md:w-auto md:order-1" />
-		</div>
-	</NavContainer>
-</Navbar>
+				</NavUl>
 
-{#key $configurationStore}
-	{#if $configurationMissing}
-		<AppConfigMissing />
-	{:else}
-		{#await glCurrentUser}
-			<AppLoading
-				title="Init Gitlab environment"
-				message="Now we query your identity. We ask for your patience..."
-			/>
-		{:then}
-			<MrList bind:this={appMrList} on:count={(count) => (countMr = count.detail)} />
-		{:catch error}
-			<AppError
-				message={(error && error.cause && error.cause.description) ||
-					(error && error.message) ||
-					error}
-			/>
-		{/await}
-	{/if}
-{/key}
+				<DarkMode class="mr-2" />
+
+				{#if !$configurationMissing}
+					{#await glCurrentUser}
+						<Avatar id="avatar-currentuser" />
+					{:then glCurrentUser}
+						<Avatar id="avatar-currentuser" src={glCurrentUser.avatar_url} />
+						<Tooltip
+							type="light"
+							arrow={false}
+							placement="bottom"
+							color="green"
+							class="whitespace-pre-line"
+						>
+							<b>{glCurrentUser.name}</b>
+							<br />
+							{glCurrentUser.email}
+						</Tooltip>
+					{/await}
+				{/if}
+
+				<NavHamburger class1="w-full md:flex md:w-auto md:order-1" />
+			</div>
+		</NavContainer>
+	</Navbar>
+
+	{#key $configurationStore}
+		{#if $configurationMissing}
+			<AppConfigMissing />
+		{:else}
+			{#await glCurrentUser}
+				<AppLoading
+					title="Init Gitlab environment"
+					message="Now we query your identity. We ask for your patience..."
+				/>
+			{:then}
+				<MrList bind:this={appMrList} on:count={(count) => (countMr = count.detail)} />
+			{:catch error}
+				<AppError
+					message={(error && error.cause && error.cause.description) ||
+						(error && error.message) ||
+						error}
+				/>
+			{/await}
+		{/if}
+	{/key}
+</div>
 
 <ModalPortal store={modalStore} />

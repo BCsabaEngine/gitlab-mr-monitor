@@ -46,10 +46,10 @@ export const reloadInitial = () => {
 	glCurrentUser = getConfiguredGitlabClient().Users.showCurrentUser({ showExpanded: false });
 };
 
-export const generateMrPromisesFromScope = (
+export const generateMrPromisesFromScope = async (
 	scope: Scope,
 	user: ExpandedUserSchema
-): Promise<MergeRequestSchemaWithBasicLabels[]>[] => {
+): Promise<MergeRequestSchemaWithBasicLabels[][]> => {
 	let updatedAfter: string | undefined;
 	if ('days' in scope && scope.days > 0) {
 		const today = new Date();
@@ -59,22 +59,24 @@ export const generateMrPromisesFromScope = (
 
 	switch (scope.mode) {
 		case 'project':
-			return scope.projects.map((p) =>
-				getConfiguredGitlabClient().MergeRequests.all({
-					projectId: p,
-					state: 'opened',
-					updatedAfter
-				})
+			return await Promise.all(
+				scope.projects.map(async (p) =>
+					getConfiguredGitlabClient().MergeRequests.all({
+						projectId: p,
+						state: 'opened',
+						updatedAfter
+					})
+				)
 			);
 		case 'self-author':
 			return [
-				getConfiguredGitlabClient().MergeRequests.all({
+				await getConfiguredGitlabClient().MergeRequests.all({
 					state: 'opened'
 				})
 			];
 		case 'self-reviewer':
 			return [
-				getConfiguredGitlabClient().MergeRequests.all({
+				await getConfiguredGitlabClient().MergeRequests.all({
 					state: 'opened',
 					reviewerId: user.id
 				})

@@ -11,23 +11,29 @@
 
 	let scopes: Scope[] = [];
 	let controls: MrScope[] = [];
-	let sumCount = 0;
+	let counts: number[] = [];
 	export const refresh = async (background: boolean) => {
-		sumCount = 0;
 		for (const control of controls) await control.refresh(background);
 	};
 
 	onMount(() => {
 		scopes = dummyScopes;
 		controls = Array.from({ length: scopes.length });
+		counts = Array.from({ length: scopes.length });
+		counts.fill(0);
 	});
-
-	const onCount = (count: number) => {
-		sumCount += count;
-		dispatch('count', sumCount);
-	};
 </script>
 
 {#each scopes as scope, index}
-	<MrScope bind:this={controls[index]} on:count={(count) => onCount(count.detail)} {scope} />
+	<MrScope
+		bind:this={controls[index]}
+		on:count={(count) => {
+			counts[index] = count.detail;
+			dispatch(
+				'count',
+				counts.reduce((p, c) => p + c, 0)
+			);
+		}}
+		{scope}
+	/>
 {/each}
