@@ -75,8 +75,8 @@ export const postProcess = async (
 				...mr,
 				project: getProject(mr.project_id),
 				merge_status_human: statusToHuman(mr.detailed_merge_status),
-				createdFromNow: dayjs().from(dayjs(mr.created_at)),
-				updatedFromNow: dayjs().from(dayjs(mr.updated_at))
+				createdFromNow: dayjs().from(dayjs(mr.created_at), true),
+				updatedFromNow: dayjs().from(dayjs(mr.updated_at), true)
 			});
 		}
 	}

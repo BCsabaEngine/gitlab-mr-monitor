@@ -1,7 +1,11 @@
 <script lang="ts">
 	import { Avatar, Badge, Card, Tooltip } from 'flowbite-svelte';
 	import { Toolbar, ToolbarGroup } from 'flowbite-svelte';
-	import { InfoCircleOutline } from 'flowbite-svelte-icons';
+	import {
+		ArrowRightSolid,
+		ClockOutline,
+		CodeBranchSolid,
+		InfoCircleOutline	} from 'flowbite-svelte-icons';
 
 	import type { MergeRequest } from '$lib/mr';
 
@@ -31,10 +35,15 @@
 					class="mr-1">{mr.merge_status_human.status}</Badge
 				>
 			{/if}
-			{#each mr.assignees || [] as assignee}
-				<Avatar id="avatar-currentuser" size="xs" src={assignee.avatar_url} />
-				<Tooltip type="light" arrow={false} color="green">{assignee.name} as assignee</Tooltip>
-			{/each}
+			{#if mr.assignees && mr.assignees.length > 0}
+				{#each mr.assignees || [] as assignee}
+					<Avatar id="avatar-currentuser" size="xs" src={assignee.avatar_url} />
+					<Tooltip type="light" arrow={false} color="green">{assignee.name} as assignee</Tooltip>
+				{/each}
+			{:else}
+				<Avatar id="avatar-currentuser" size="xs" src={mr.author.avatar_url} />
+				<Tooltip type="light" arrow={false} color="green">{mr.author.name} as author</Tooltip>
+			{/if}
 			{#each mr.reviewers || [] as reviewer}
 				<Avatar id="avatar-currentuser" size="sm" src={reviewer.avatar_url} />
 				<Tooltip type="light" arrow={false} color="green">{reviewer.name} as reviewer</Tooltip>
@@ -60,12 +69,15 @@
 			>
 		{/if}
 	</h5>
-	<div class="flex place-self-start text-sm mx-2">
-		to
+	<div class="flex gap-1 text-sm mx-2">
+		<CodeBranchSolid size="sm" class="mt-0.5" />
+		{mr.source_branch}
+		<ArrowRightSolid />
 		{mr.target_branch}
-		by
-		{mr.author.name}
-		{mr.updatedFromNow}
+	</div>
+	<div class="flex gap-1 text-sm mx-2">
+		<ClockOutline size="sm" class="mt-0.5" />
+		{mr.updatedFromNow} ago
 	</div>
 	<div class="flex place-self-end">
 		{#each mr.labels as label}
