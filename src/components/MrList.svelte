@@ -1,47 +1,33 @@
 <script lang="ts">
-	import type { MergeRequestSchemaWithBasicLabels } from '@gitbeaker/rest';
 	import { createEventDispatcher, onMount } from 'svelte';
 
-	import AppLoading from '$components/appStatusCards/AppLoading.svelte';
-	import { dummyScopes, getMrs } from '$lib/gitlab';
-	import { type MergeRequest, postProcess } from '$lib/mr';
+	import { dummyScopes } from '$stores/configStore';
+	import type { Scope } from '$types/Scope';
 
-	//import { configurationStore, getConfigurationStoreValue } from '$stores/configStore';
-	import Mr from './Mr.svelte';
+	import MrScope from './MrScope.svelte';
 	const dispatch = createEventDispatcher<{
 		count: number;
 	}>();
 
-	let mrPromises: Promise<MergeRequestSchemaWithBasicLabels[][]>;
-	let mrs: MergeRequest[] = [];
+	let scopes: Scope[] = [];
+	let controls: MrScope[] = [];
+	let sumCount = 0;
 	export const refresh = async (background: boolean) => {
-		mrPromises = background ? Promise.resolve(await getMrs()) : getMrs();
-		mrPromises.then(async (value) => {
-			//mrs = postProcess(getConfigurationStoreValue().scopes, value);
-			mrs = await postProcess(dummyScopes, value);
-			dispatch('count', mrs.length);
-		});
+		sumCount = 0;
+		for (const control of controls) await control.refresh(background);
 	};
 
 	onMount(() => {
-		refresh(false);
+		scopes = dummyScopes;
+		controls = Array.from({ length: scopes.length });
 	});
+
+	const onCount = (count: number) => {
+		sumCount += count;
+		dispatch('count', sumCount);
+	};
 </script>
 
-{#await mrPromises}
-	<AppLoading
-		lazyMs={750}
-		title="Pending MRs"
-		message="A few moments and we will see the merge requests..."
-	/>
-{:then}
-	{#if mrs && mrs.length > 0}
-		<div class="container mx-auto mb-4">
-			<div class="mt-2 grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-				{#each mrs as mr (mr.id)}
-					<Mr {mr} />
-				{/each}
-			</div>
-		</div>
-	{/if}
-{/await}
+{#each scopes as scope, index}
+	<MrScope bind:this={controls[index]} on:count={(count) => onCount(count.detail)} {scope} />
+{/each}

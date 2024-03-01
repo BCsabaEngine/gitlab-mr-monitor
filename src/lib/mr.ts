@@ -58,28 +58,24 @@ const statusToHuman = (
 };
 
 export const postProcess = async (
-	scopes: Scope[],
+	scope: Scope,
 	mrs: MergeRequestSchemaWithBasicLabels[][]
 ): Promise<MergeRequest[]> => {
 	const result: MergeRequest[] = [];
 
-	if (scopes.length != mrs.length) return result;
-
-	for (const [index, scope] of scopes.entries()) {
-		const mrg = mrs[index];
+	for (const mrg of mrs)
 		for (const mr of mrg) {
-			if (result.some((m) => m.id === mr.id)) continue;
 			if (mr.draft && !scope.draft) continue;
-			mr.title = mr.title.replace(/^draft:/i, '').trim();
+			if (result.some((m) => m.id === mr.id)) continue;
 			result.push({
 				...mr,
+				title: mr.title.replace(/^draft:/i, '').trim(),
 				project: getProject(mr.project_id),
 				merge_status_human: statusToHuman(mr.detailed_merge_status),
 				createdFromNow: dayjs().from(dayjs(mr.created_at), true),
 				updatedFromNow: dayjs().from(dayjs(mr.updated_at), true)
 			});
 		}
-	}
 
 	result.sort((a, b) => {
 		let result = b.project_id - a.project_id;

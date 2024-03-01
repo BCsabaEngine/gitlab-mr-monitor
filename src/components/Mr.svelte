@@ -5,7 +5,8 @@
 		ArrowRightSolid,
 		ClockOutline,
 		CodeBranchSolid,
-		InfoCircleOutline	} from 'flowbite-svelte-icons';
+		InfoCircleOutline
+	} from 'flowbite-svelte-icons';
 
 	import type { MergeRequest } from '$lib/mr';
 

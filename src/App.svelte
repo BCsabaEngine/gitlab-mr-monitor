@@ -85,8 +85,9 @@
 					>
 						<b>{glCurrentUser.name}</b>
 						<br />
-						{glCurrentUser.email}</Tooltip
-					>
+						{glCurrentUser.email}
+						#{glCurrentUser.id}
+					</Tooltip>
 				{/await}
 			{/if}
 			<NavHamburger class1="w-full md:flex md:w-auto md:order-1" />
