@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { MergeRequestSchemaWithBasicLabels } from '@gitbeaker/rest';
-	import { Indicator } from 'flowbite-svelte';
+	import { CaretRightSolid } from 'flowbite-svelte-icons';
 	import { createEventDispatcher, onMount } from 'svelte';
 
 	import { generateMrPromisesFromScope, glCurrentUser } from '$lib/gitlab';
@@ -36,8 +36,8 @@
 	{#if mrs && mrs.length > 0}
 		<div class="container mx-auto pb-4">
 			<span class="flex items-center ml-2 text-lg dark:text-gray-200"
-				><Indicator size="md" color="green" class="me-2" />{scope.name}</span
-			>
+				><CaretRightSolid class="mr-2" />{scope.name}
+			</span>
 			<div class="mt-2 grid md:grid-cols-2 lg:grid-cols-3 gap-4">
 				{#each mrs as mr (mr.id)}
 					<Mr {mr} />
