@@ -1,13 +1,18 @@
 <script lang="ts">
-	import { Button, Helper, Input, Label, Modal, TabItem, Tabs } from 'flowbite-svelte';
+	import { Button, Helper, Hr, Input, Label, Modal, TabItem, Tabs, Toggle } from 'flowbite-svelte';
 	import { CheckOutline } from 'flowbite-svelte-icons';
 	import { createEventDispatcher } from 'svelte';
 
 	import BadgeAutohide from '$components/base/BadgeAutohide.svelte';
 	import AutoFocus from '$components/modal/util/AutoFocus.svelte';
+	import { swap } from '$lib/array';
 	import { checkGitlabConnection } from '$lib/gitlab';
+	import { showModalNameEdit } from '$stores/modalStore';
 	import type { Configuration } from '$types/Configuration';
 	import { GitlabAccess } from '$types/GitlabAccess';
+	import type { Scope } from '$types/Scope';
+
+	import SettingsScope from './SettingsScope.svelte';
 
 	const dispatch = createEventDispatcher<{
 		resolve: {
@@ -57,6 +62,41 @@
 	let checkConnectionButtonEnabled: boolean = false;
 	$: checkConnectionButtonEnabled = GitlabAccess.safeParse(configuration.gitlab).success;
 
+	const scopeMove = (scope: Scope, moveUp: boolean) => {
+		const index = configuration.scopes.indexOf(scope);
+		if (index < 0) return;
+
+		if (moveUp) {
+			if (index > 0) configuration.scopes = swap(configuration.scopes, index, index - 1);
+		} else {
+			if (index < configuration.scopes.length - 1)
+				configuration.scopes = swap(configuration.scopes, index, index + 1);
+		}
+	};
+
+	const scopeDelete = (scope: Scope) => {
+		const index = configuration.scopes.indexOf(scope);
+		if (index < 0) return;
+
+		configuration.scopes.splice(index, 1);
+		configuration.scopes = configuration.scopes;
+	};
+
+	const addNewScope = async () => {
+		const name = await showModalNameEdit('New scope');
+		if (name.confirmed && name.name) {
+			configuration.scopes.push({
+				mode: 'project',
+				projects: [],
+				name: name.name,
+				days: 7,
+				draft: false,
+				alert: true
+			});
+			configuration.scopes = configuration.scopes;
+		}
+	};
+
 	export let configuration: Configuration;
 </script>
 
@@ -64,8 +104,9 @@
 	<AutoFocus />
 	<h3 class="mb-10 text-lg font-normal text-gray-500 dark:text-gray-400">Settings</h3>
 	<Tabs style="underline" contentClass="p-4 rounded-lg mt-4">
-		<TabItem open title="Gitlab access">
-			<div class="grid gap-6 mb-6 md:grid-cols-2">
+		<TabItem open title="General">
+			Gitlab access
+			<div class="grid gap-6 mb-6 mt-2 md:grid-cols-2">
 				<div>
 					<Label for="host" class="mb-2">Host</Label>
 					<Input
@@ -98,15 +139,34 @@
 			>
 			<br />
 			<BadgeAutohide bind:this={badgeErrorDisplay} class="mt-2" />
+
+			<Hr />
+
+			User preferences
+			<div class="grid gap-6 mb-6 mt-4 md:grid-cols-3">
+				<Toggle checked={true}>Checked toggle</Toggle>
+				<Toggle checked={true}>Checked toggle</Toggle>
+				<Toggle checked={false}>Checked toggle</Toggle>
+				<Toggle checked={true}>Checked toggle</Toggle>
+			</div>
 		</TabItem>
-		<TabItem title="Dashboard">
-			<p class="text-sm text-gray-500 dark:text-gray-400">
-				<b>Dashboard:</b>
-				Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-				labore et dolore magna aliqua.
-			</p>
+
+		<TabItem title="Scopes">
+			<Button class="mb-2" size="sm" on:click={addNewScope}>New scope</Button>
+			{#each configuration.scopes as scope, index}
+				<SettingsScope
+					{scope}
+					isFirst={index === 0}
+					isLast={index === configuration.scopes.length - 1}
+					allowDelete={scope.mode === 'project'}
+					on:moveUp={() => scopeMove(scope, true)}
+					on:moveDown={() => scopeMove(scope, false)}
+					on:delete={() => scopeDelete(scope)}
+				/>
+			{/each}
 		</TabItem>
 	</Tabs>
+
 	<div class="absolute right-4 bottom-6">
 		<Button
 			on:click={() => resolve(true)}

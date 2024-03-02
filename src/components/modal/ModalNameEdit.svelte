@@ -15,7 +15,7 @@
 		dispatch('resolve', {
 			trigger: 'custom',
 			confirmed,
-			name
+			name: name.trim()
 		});
 
 	export let name: string;

@@ -12,11 +12,27 @@ const emptyConfiguration: Configuration = {
 	ignoredUsers: [],
 	scopes: []
 };
+const defaultSelfAuthor: Scope = {
+	mode: 'self-author',
+	name: 'Me as author',
+	draft: false
+};
+const defaultSelfReviewer: Scope = {
+	mode: 'self-reviewer',
+	name: 'Me as reviewer',
+	draft: false,
+	alert: true
+};
 
 export const configurationJsonSerializer = {
 	parse: (text: string) => {
 		try {
-			return Configuration.parse(JSON.parse(text));
+			const config = Configuration.parse(JSON.parse(text));
+			if (!config.scopes.some((s) => s.mode === 'self-author'))
+				config.scopes.push(defaultSelfAuthor);
+			if (!config.scopes.some((s) => s.mode === 'self-reviewer'))
+				config.scopes.push(defaultSelfReviewer);
+			return config;
 		} catch {
 			return emptyConfiguration;
 		}
