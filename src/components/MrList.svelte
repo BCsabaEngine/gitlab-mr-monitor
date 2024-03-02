@@ -10,13 +10,17 @@
 	}>();
 
 	let lastRefreshIsBackground = false;
+	let refreshSessionId = 0;
+	let refreshSessionIdAlertPlayed = 0;
+
 	let scopes: Scope[] = [];
 	let controls: MrScope[] = [];
 	let counts: number[] = [];
 	let audio: HTMLAudioElement;
-	export const refresh = async (background: boolean) => {
+	export const refresh = async (sessionId: number, background: boolean) => {
 		lastRefreshIsBackground = background;
-		for (const control of controls) await control.refresh(background);
+		refreshSessionId = sessionId;
+		for (const control of controls) await control.refresh(sessionId, background);
 	};
 
 	let lastNotificationPlayedAt = Date.now();
@@ -42,12 +46,21 @@
 	<MrScope
 		bind:this={controls[index]}
 		on:count={(count) => {
-			if (counts[index] < count.detail) playNotification();
-			counts[index] = count.detail;
+			if (count.detail.sessionId !== refreshSessionId) return;
+
+			counts[index] = count.detail.count;
 			dispatch(
 				'count',
 				counts.reduce((p, c) => p + c, 0)
 			);
+		}}
+		on:alert={(alert) => {
+			if (alert.detail.sessionId !== refreshSessionId) return;
+
+			if (refreshSessionIdAlertPlayed !== alert.detail.sessionId) {
+				playNotification();
+				refreshSessionIdAlertPlayed !== alert.detail.sessionId;
+			}
 		}}
 		{scope}
 	/>

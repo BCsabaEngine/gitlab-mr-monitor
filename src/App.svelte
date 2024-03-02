@@ -31,10 +31,12 @@
 	let countMr: number = 0;
 
 	let refreshButtonDisabled: boolean = false;
+	let refreshSessionId = 0;
 	const refreshMrList = async (background: boolean) => {
 		refreshButtonDisabled = true;
 		try {
-			await appMrList.refresh(background);
+			refreshSessionId++;
+			await appMrList.refresh(refreshSessionId, background);
 		} finally {
 			refreshButtonDisabled = false;
 		}

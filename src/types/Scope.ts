@@ -5,11 +5,24 @@ export const BaseScope = z.object({
 	draft: z.boolean().default(false)
 });
 
-export const BaseScopeEx = z.intersection(
+export const BaseAlertScope = z.intersection(
 	BaseScope,
 	z.object({
-		days: z.number().nonnegative(),
 		alert: z.boolean().default(false)
+	})
+);
+
+export const BaseDaysWindowScope = z.intersection(
+	BaseScope,
+	z.object({
+		days: z.number().nonnegative()
+	})
+);
+
+export const BaseAlertDaysWindowScope = z.intersection(
+	BaseAlertScope,
+	z.object({
+		days: z.number().nonnegative()
 	})
 );
 
@@ -22,7 +35,7 @@ export const AuthorScope = z.intersection(
 export type AuthorScope = z.infer<typeof AuthorScope>;
 
 export const ReviewerScope = z.intersection(
-	BaseScope,
+	BaseAlertScope,
 	z.object({
 		mode: z.literal('self-reviewer')
 	})
@@ -30,7 +43,7 @@ export const ReviewerScope = z.intersection(
 export type ReviewerScope = z.infer<typeof ReviewerScope>;
 
 export const ProjectScope = z.intersection(
-	BaseScopeEx,
+	BaseAlertDaysWindowScope,
 	z.object({
 		mode: z.literal('project'),
 		projects: z.array(z.string())

@@ -55,7 +55,8 @@ export const dummyScopes: Scope[] = [
 	{
 		name: 'Me as reviewer',
 		mode: 'self-reviewer',
-		draft: true
+		draft: true,
+		alert: true
 	},
 	{
 		name: 'Favorite projects',

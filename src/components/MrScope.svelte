@@ -9,26 +9,33 @@
 
 	import Mr from './Mr.svelte';
 	const dispatch = createEventDispatcher<{
-		count: number;
+		count: { sessionId: number; count: number };
+		alert: { sessionId: number };
 	}>();
 
 	export let scope: Scope;
 
 	let mrPromises: Promise<MergeRequestSchemaWithBasicLabels[][]>;
 	let mrs: MergeRequest[] = [];
-	export const refresh = async (background: boolean) => {
+	let previousMrsIds: number[] = [];
+	export const refresh = async (sessionId: number, background: boolean) => {
 		const currentuser = await glCurrentUser;
 		mrPromises = background
 			? Promise.resolve(await generateMrPromisesFromScope(scope, currentuser))
 			: generateMrPromisesFromScope(scope, currentuser);
 		mrPromises.then(async (value) => {
 			mrs = await postProcess(scope, value);
-			dispatch('count', mrs.length);
+			dispatch('count', { sessionId, count: mrs.length });
+
+			const mrsIds = mrs.map((m) => m.id);
+			if ('alert' in scope && scope.alert && mrsIds.some((mid) => !previousMrsIds.includes(mid)))
+				dispatch('alert', { sessionId });
+			previousMrsIds = mrsIds;
 		});
 	};
 
 	onMount(() => {
-		refresh(false);
+		refresh(0, false);
 	});
 </script>
 
