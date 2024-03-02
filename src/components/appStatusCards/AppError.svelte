@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { Button } from 'flowbite-svelte';
 
-	import { openConfiguration } from '../../common/openConfiguration';
+	import { openLogin } from '../../common/openConfiguration';
 
 	export let message: string;
 </script>
@@ -15,6 +15,6 @@
 			{message}
 		</p>
 		<br />
-		<Button color="red" on:click={() => openConfiguration()}>Open settings</Button>
+		<Button color="red" on:click={() => openLogin()}>Login</Button>
 	</center>
 </div>

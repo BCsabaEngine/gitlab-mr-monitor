@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { createEventDispatcher, onMount } from 'svelte';
 
-	import { dummyScopes } from '$stores/configStore';
+	import { dummyScopes } from '$stores/configurationStore';
 	import type { Scope } from '$types/Scope';
 
 	import MrScope from './MrScope.svelte';

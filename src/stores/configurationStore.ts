@@ -1,18 +1,9 @@
-import { derived, get, type Updater } from 'svelte/store';
+import { get, type Updater } from 'svelte/store';
 import { persisted } from 'svelte-persisted-store';
 
 import { Configuration } from '$types/Configuration';
 import type { Scope } from '$types/Scope';
 
-const emptyConfiguration: Configuration = {
-	gitlab: {
-		host: '',
-		token: ''
-	},
-	ignoredUsers: [],
-	scopes: [],
-	autoRefreshSec: 0
-};
 const defaultSelfAuthor: Scope = {
 	mode: 'self-author',
 	name: 'Me as author',
@@ -25,6 +16,10 @@ const defaultSelfReviewer: Scope = {
 	enabled: true,
 	draft: false,
 	alert: true
+};
+const emptyConfiguration: Configuration = {
+	ignoredUsers: [],
+	scopes: [defaultSelfAuthor, defaultSelfReviewer]
 };
 
 export const configurationJsonSerializer = {
@@ -54,16 +49,6 @@ export const setConfigurationStoreValue = (configuration: Configuration) =>
 	configurationStore.set(configuration);
 export const updateConfigurationStoreValue = (updater: Updater<Configuration>) =>
 	configurationStore.update(updater);
-
-export const configurationMissing = derived(
-	configurationStore,
-	($cfg) => !$cfg.gitlab.host || !$cfg.gitlab.token
-);
-
-export const configurationHash = derived(
-	configurationStore,
-	($cfg) => $cfg.gitlab.host + $cfg.gitlab.token
-);
 
 export const dummyScopes: Scope[] = [
 	{

@@ -5,7 +5,7 @@ import {
 	type ProjectSchema
 } from '@gitbeaker/rest';
 
-import { getConfigurationStoreValue } from '$stores/configStore';
+import { getLoginStoreValue } from '$stores/loginStore';
 import type { Scope } from '$types/Scope';
 
 export const checkGitlabConnection = async (host: string, token: string) => {
@@ -17,10 +17,10 @@ export const checkGitlabConnection = async (host: string, token: string) => {
 };
 
 export const getConfiguredGitlabClient = () => {
-	const config = getConfigurationStoreValue();
+	const login = getLoginStoreValue();
 	return new Gitlab({
-		host: config.gitlab.host,
-		token: config.gitlab.token
+		host: login.host,
+		token: login.token
 	});
 };
 

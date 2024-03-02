@@ -1,7 +1,7 @@
 <script>
 	import { Button } from 'flowbite-svelte';
 
-	import { openConfiguration } from '../../common/openConfiguration';
+	import { openLogin } from '../../common/openConfiguration';
 </script>
 
 <div class="flex justify-center mt-9">
@@ -13,6 +13,6 @@
 			You need to set up access to the Gitlab server before we can proceed.
 		</p>
 		<br />
-		<Button color="primary" on:click={() => openConfiguration()}>Open settings</Button>
+		<Button color="primary" on:click={() => openLogin()}>Login</Button>
 	</center>
 </div>

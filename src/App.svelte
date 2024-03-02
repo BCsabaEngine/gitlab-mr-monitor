@@ -9,18 +9,23 @@
 		Badge,
 		Button,
 		DarkMode,
+		Dropdown,
+		DropdownHeader,
+		DropdownItem,
 		Kbd,
 		Navbar,
 		NavHamburger,
 		NavUl,
-		Tooltip
+		Radio
 	} from 'flowbite-svelte';
 	import { CogOutline, ExclamationCircleOutline, RefreshOutline } from 'flowbite-svelte-icons';
 
-	import AppConfigMissing from '$components/appStatusCards/AppConfigMissing.svelte';
+	import AppConfigMissing from '$components/appStatusCards/AppLoginMissing.svelte';
 	import { glCurrentUser } from '$lib/gitlab';
-	import { configurationMissing, configurationStore } from '$stores/configStore';
+	import { configurationStore } from '$stores/configurationStore';
+	import { loginMissing, resetLoginStoreValue } from '$stores/loginStore';
 	import { modalStore } from '$stores/modalStore';
+	import { userPreferencesStore } from '$stores/userPreferencesStore';
 
 	import { openConfiguration } from './common/openConfiguration';
 	import AppError from './components/appStatusCards/AppError.svelte';
@@ -42,6 +47,18 @@
 			refreshButtonDisabled = false;
 		}
 	};
+
+	const autoRefreshList = [
+		{ value: 0, name: 'Manual only' },
+		{ value: 30, name: '30 seconds' },
+		{ value: 60, name: '1 minute' },
+		{ value: 2 * 60, name: '2 minutes' },
+		{ value: 3 * 60, name: '3 minutes' },
+		{ value: 5 * 60, name: '5 minutes' },
+		{ value: 10 * 60, name: '10 minutes' },
+		{ value: 15 * 60, name: '15 minutes' },
+		{ value: 30 * 60, name: '30 minutes' }
+	];
 </script>
 
 <svelte:window
@@ -57,7 +74,7 @@
 				<span class="self-center whitespace-nowrap text-xl font-semibold dark:text-white"
 					>Gitlab MR monitor</span
 				>
-				{#if countMr > 0 && !$configurationMissing}
+				{#if countMr > 0 && !$loginMissing}
 					<Badge large border class="ml-4" color={countMr > 100 ? 'red' : 'green'}>
 						{#if countMr > 10}
 							<ExclamationCircleOutline class="mr-2" />
@@ -68,34 +85,43 @@
 			</div>
 			<div class="flex items-center md:order-3">
 				<NavUl>
-					{#if !$configurationMissing}
+					{#if !$loginMissing}
 						<Button size="md" disabled={refreshButtonDisabled} on:click={() => refreshMrList(false)}
 							><RefreshOutline class="mr-1" />Refresh <Kbd class="ml-2 px-2">R</Kbd></Button
 						>
+						<Button color="alternative" class="flex" size="md" on:click={() => openConfiguration()}
+							><CogOutline class="mr-1" />Settings</Button
+						>
 					{/if}
-					<Button color="alternative" class="flex" size="md" on:click={() => openConfiguration()}
-						><CogOutline class="mr-1" />Settings</Button
-					>
 				</NavUl>
 
-				<DarkMode class="mr-2" />
+				<DarkMode size="sm" class="mr-2" />
 
-				{#if !$configurationMissing}
+				{#if !$loginMissing}
 					{#await glCurrentUser}
 						<Avatar id="avatar-currentuser" />
 					{:then glCurrentUser}
-						<Avatar id="avatar-currentuser" src={glCurrentUser.avatar_url} />
-						<Tooltip
-							type="light"
-							arrow={false}
-							placement="bottom"
-							color="green"
-							class="whitespace-pre-line"
-						>
-							<b>{glCurrentUser.name}</b>
-							<br />
-							{glCurrentUser.username}
-						</Tooltip>
+						<Avatar id="avatar-currentuser" src={glCurrentUser.avatar_url} class="cursor-pointer" />
+						<Dropdown placement="bottom" class="min-w-40">
+							<DropdownHeader>
+								<span class="block text-sm">{glCurrentUser.name}</span>
+								<span class="block truncate text-sm font-medium">{glCurrentUser.username}</span>
+							</DropdownHeader>
+							<DropdownItem>Auto refresh...</DropdownItem>
+							<Dropdown placement="left-start" class="w-44 p-3 space-y-3 text-sm">
+								{#each autoRefreshList as autoRefresh}
+									<li>
+										<Radio
+											name="groupAutoRefresh"
+											value={autoRefresh.value}
+											bind:group={$userPreferencesStore.autoRefreshSec}>{autoRefresh.name}</Radio
+										>
+									</li>
+								{/each}
+							</Dropdown>
+							<DropdownItem on:click={() => openConfiguration()}>Settings</DropdownItem>
+							<DropdownItem on:click={() => resetLoginStoreValue()}>Logout</DropdownItem>
+						</Dropdown>
 					{/await}
 				{/if}
 
@@ -105,7 +131,7 @@
 	</Navbar>
 
 	{#key $configurationStore}
-		{#if $configurationMissing}
+		{#if $loginMissing}
 			<AppConfigMissing />
 		{:else}
 			{#await glCurrentUser}
