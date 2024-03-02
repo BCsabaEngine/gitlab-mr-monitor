@@ -31,7 +31,7 @@ export const getProject = async (id: number): Promise<ProjectSchema> => {
 };
 
 //export const glGroups = getGitlabClient().Groups.all({ showExpanded: false });
-//export const glUsers = getGitlabClient().Users.all({ active: true, showExpanded: false });
+export const glUsers = getConfiguredGitlabClient().Users.all({ active: true, showExpanded: false });
 
 /* Once initialized promises */
 export let glCurrentUser = getConfiguredGitlabClient().Users.showCurrentUser({

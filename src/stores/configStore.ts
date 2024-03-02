@@ -10,16 +10,19 @@ const emptyConfiguration: Configuration = {
 		token: ''
 	},
 	ignoredUsers: [],
-	scopes: []
+	scopes: [],
+	autoRefreshSec: 0
 };
 const defaultSelfAuthor: Scope = {
 	mode: 'self-author',
 	name: 'Me as author',
+	enabled: true,
 	draft: false
 };
 const defaultSelfReviewer: Scope = {
 	mode: 'self-reviewer',
 	name: 'Me as reviewer',
+	enabled: true,
 	draft: false,
 	alert: true
 };
@@ -66,17 +69,20 @@ export const dummyScopes: Scope[] = [
 	{
 		name: 'Me as author',
 		mode: 'self-author',
+		enabled: true,
 		draft: true
 	},
 	{
 		name: 'Me as reviewer',
 		mode: 'self-reviewer',
+		enabled: true,
 		draft: true,
 		alert: true
 	},
 	{
 		name: 'Favorite projects',
 		mode: 'project',
+		enabled: true,
 		projects: ['805', '852', '47'],
 		alert: false,
 		days: 7,
@@ -85,6 +91,7 @@ export const dummyScopes: Scope[] = [
 	{
 		name: 'Alternate projects',
 		mode: 'project',
+		enabled: true,
 		projects: ['802', '852'],
 		alert: false,
 		days: 7,

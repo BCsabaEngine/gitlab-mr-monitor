@@ -40,6 +40,7 @@
 			{:else}
 				<span class="w-4" />
 			{/if}
+			<Toggle size="small" bind:checked={scope.enabled}>On/Off</Toggle>
 			<!-- svelte-ignore a11y-click-events-have-key-events -->
 			<!-- svelte-ignore a11y-no-static-element-interactions -->
 			<span
@@ -49,30 +50,32 @@
 				{scope.name}
 			</span>
 		</div>
-		<div class="flex flex-row gap-8">
-			{#if 'days' in scope}
-				<NumberInputBound
-					class="w-14"
-					size="sm"
-					metric="days"
-					bind:value={scope.days}
-					min={0}
-					max={60}
-				/>
-			{/if}
-			{#if 'alert' in scope}
-				<Toggle size="small" bind:checked={scope.alert}>Alert</Toggle>
-			{/if}
-			<Toggle size="small" bind:checked={scope.draft}>Draft</Toggle>
-			{#if allowDelete}
-				<TrashBinSolid
-					size="sm"
-					class="my-2 cursor-pointer text-red-700"
-					on:click={() => dispatch('delete')}
-				/>
-			{:else}
-				<span class="w-4" />
-			{/if}
-		</div>
+		{#if scope.enabled}
+			<div class="flex flex-row gap-8">
+				{#if 'days' in scope}
+					<NumberInputBound
+						class="w-14"
+						size="sm"
+						metric="days"
+						bind:value={scope.days}
+						min={0}
+						max={60}
+					/>
+				{/if}
+				{#if 'alert' in scope}
+					<Toggle disabled size="small" bind:checked={scope.alert}>Alert</Toggle>
+				{/if}
+				<Toggle size="small" bind:checked={scope.draft}>Draft</Toggle>
+				{#if allowDelete}
+					<TrashBinSolid
+						size="sm"
+						class="my-2 cursor-pointer text-red-700"
+						on:click={() => dispatch('delete')}
+					/>
+				{:else}
+					<span class="w-4" />
+				{/if}
+			</div>
+		{/if}
 	</div>
 </Card>
