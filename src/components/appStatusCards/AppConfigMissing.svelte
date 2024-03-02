@@ -9,7 +9,7 @@
 		<h5 class="mb-2 text-2xl font-bold tracking-tight text-primary-600 dark:text-white">
 			We can't start yet
 		</h5>
-		<p class="font-normal text-gray-700 dark:text-gray-400 leading-tight">
+		<p class="font-normal text-gray-700 dark:text-gray-200 leading-tight">
 			You need to set up access to the Gitlab server before we can proceed.
 		</p>
 		<br />

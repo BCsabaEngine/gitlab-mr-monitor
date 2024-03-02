@@ -33,6 +33,7 @@
 	let refreshButtonDisabled: boolean = false;
 	let refreshSessionId = 0;
 	const refreshMrList = async (background: boolean) => {
+		if (!appMrList) return;
 		refreshButtonDisabled = true;
 		try {
 			refreshSessionId++;
@@ -48,7 +49,7 @@
 		trigger: [{ key: 'r', modifier: [], callback: () => refreshMrList(true), preventDefault: true }]
 	}}
 />
-<div class="bg-gray-200 dark:bg-gray-400">
+<div class="bg-gray-200 dark:bg-gray-400 min-h-screen">
 	<Navbar let:NavContainer color="none">
 		<NavContainer class="border px-5 py-2 lg bg-white dark:bg-gray-600">
 			<div class="flex items-left md:order-2">
@@ -56,7 +57,7 @@
 				<span class="self-center whitespace-nowrap text-xl font-semibold dark:text-white"
 					>Gitlab MR monitor</span
 				>
-				{#if countMr > 0}
+				{#if countMr > 0 && !$configurationMissing}
 					<Badge large border class="ml-4" color={countMr > 100 ? 'red' : 'green'}>
 						{#if countMr > 10}
 							<ExclamationCircleOutline class="mr-2" />

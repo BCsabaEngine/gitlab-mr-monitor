@@ -11,7 +11,7 @@
 		<h5 class="mb-2 text-2xl font-bold tracking-tight text-red-600 dark:text-white">
 			Oops, something happened
 		</h5>
-		<p class="font-normal text-gray-700 dark:text-gray-400 leading-tight">
+		<p class="font-normal text-gray-700 dark:text-gray-200 leading-tight">
 			{message}
 		</p>
 		<br />
