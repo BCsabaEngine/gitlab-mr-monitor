@@ -4,7 +4,7 @@
 	import { createEventDispatcher, onMount } from 'svelte';
 
 	import { generateMrPromisesFromScope, glCurrentUser } from '$lib/gitlab';
-	import { type MergeRequest, postProcess } from '$lib/mr';
+	import { type MergeRequest, postProcess, sortByProjectAndTitle } from '$lib/mr';
 	import type { Scope } from '$types/Scope';
 
 	import Mr from './Mr.svelte';
@@ -31,6 +31,8 @@
 			if ('alert' in scope && scope.alert && mrsIds.some((mid) => !previousMrsIds.includes(mid)))
 				dispatch('alert', { sessionId });
 			previousMrsIds = mrsIds;
+
+			mrs = await sortByProjectAndTitle(mrs);
 		});
 	};
 
@@ -43,7 +45,9 @@
 	{#if mrs && mrs.length > 0}
 		<div class="container mx-auto pb-4">
 			<span class="flex items-center ml-2 text-lg dark:text-gray-200"
-				><CaretRightSolid class="mr-2" />{scope.name}
+				><CaretRightSolid class="mr-2" />
+				{scope.name}
+				<span class="text-xs mt-0.5 ml-2">{mrs.length}</span>
 			</span>
 			<div class="mt-2 grid md:grid-cols-2 lg:grid-cols-3 gap-4">
 				{#each mrs as mr (mr.id)}

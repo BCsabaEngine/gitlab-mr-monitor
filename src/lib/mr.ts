@@ -12,6 +12,7 @@ export type LazyProjectSchema = Promise<ProjectSchema>;
 
 export type MergeRequest = MergeRequestSchemaWithBasicLabels & {
 	project: LazyProjectSchema;
+	projectNameToSort?: string;
 	merge_status_human: MergeRequestStatusHuman;
 	createdFromNow: string;
 	updatedFromNow: string;
@@ -85,3 +86,15 @@ export const postProcess = async (
 
 	return result;
 };
+
+export const sortByProjectAndTitle = (mrs: MergeRequest[]) =>
+	Promise.all(mrs.map((m) => m.project)).then(async () => {
+		for await (const mr of mrs) {
+			const project = await mr.project;
+			mr.projectNameToSort = project.name;
+		}
+		return mrs.sort((a, b) => {
+			if (!a.projectNameToSort || !b.projectNameToSort) return 0;
+			return (a.projectNameToSort! + a.title).localeCompare(b.projectNameToSort! + b.title);
+		});
+	});
