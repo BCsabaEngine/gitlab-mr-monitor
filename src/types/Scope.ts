@@ -47,7 +47,8 @@ export const ProjectScope = z.intersection(
 	BaseAlertDaysWindowScope,
 	z.object({
 		mode: z.literal('project'),
-		projects: z.array(z.string())
+		projects: z.array(z.number()).default([]),
+		onlyUsers: z.array(z.number()).default([])
 	})
 );
 export type ProjectScope = z.infer<typeof ProjectScope>;

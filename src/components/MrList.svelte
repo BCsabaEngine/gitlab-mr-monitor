@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { createEventDispatcher, onMount } from 'svelte';
 
-	import { dummyScopes } from '$stores/configurationStore';
+	import { configurationStore } from '$stores/configurationStore';
 	import type { Scope } from '$types/Scope';
 
 	import MrScope from './MrScope.svelte';
@@ -34,7 +34,7 @@
 	};
 
 	onMount(() => {
-		scopes = dummyScopes;
+		scopes = $configurationStore.scopes;
 		controls = Array.from({ length: scopes.length });
 		counts = Array.from({ length: scopes.length });
 		counts.fill(0);

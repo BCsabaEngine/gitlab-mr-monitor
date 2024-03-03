@@ -1,12 +1,13 @@
 <script lang="ts">
-	import { Badge, Button, Helper, Label, Modal, TabItem, Tabs } from 'flowbite-svelte';
+	import { Button, Helper, Modal, TabItem, Tabs } from 'flowbite-svelte';
 	import { createEventDispatcher } from 'svelte';
 
 	import AppError from '$components/appStatusCards/AppError.svelte';
 	import AppLoading from '$components/appStatusCards/AppLoading.svelte';
+	import MultiSelect, { type MultiSelectItem } from '$components/base/MultiSelect.svelte';
 	import AutoFocus from '$components/modal/util/AutoFocus.svelte';
 	import { swap } from '$lib/array';
-	import { glUsers } from '$lib/gitlab';
+	import { glProjects, glUsers } from '$lib/gitlab';
 	import { showModalNameEdit } from '$stores/modalStore';
 	import type { Configuration } from '$types/Configuration';
 	import type { Scope } from '$types/Scope';
@@ -53,6 +54,7 @@
 			configuration.scopes.push({
 				mode: 'project',
 				projects: [],
+				onlyUsers: [],
 				name: name.name,
 				enabled: true,
 				days: 7,
@@ -63,21 +65,23 @@
 		}
 	};
 
-	let userMapping: Map<number, string> = new Map<number, string>();
+	let userMapping: MultiSelectItem[] = [];
 	// eslint-disable-next-line unicorn/prefer-top-level-await
 	glUsers.then((users) => {
-		userMapping.clear();
-		for (const user of users) userMapping.set(user.id, `${user.username} / ${user.name}`);
+		userMapping = users.map((u) => ({
+			id: u.id,
+			label: `${u.name} (${u.username})`
+		}));
 	});
 
 	export let configuration: Configuration;
 </script>
 
 <Modal open={true} size="lg" dismissable={false} bodyClass="space-y-0 min-h-96">
-	{#await glUsers}
+	{#await Promise.all([glUsers, glProjects])}
 		<AppLoading
 			title="Init Gitlab settings"
-			message="Now we query some data. We ask for your patience..."
+			message="Now we query the users and projects. We ask for your patience..."
 		/>
 	{:then}
 		<AutoFocus />
@@ -110,19 +114,11 @@
 			<TabItem
 				title={`Ignored users ${configuration.ignoredUsers.length > 0 ? configuration.ignoredUsers.length : ''}`}
 			>
-				<Helper ßclass="text-xs text-gray-600 mt-1 ml-2"
+				<Helper class="text-xs text-gray-600 mt-1 ml-2"
 					>You can specify the system-level users whose MR you don't want to deal with. Eg: renovate
 					bot or a CI bot.</Helper
 				>
-				<div class="grid gap-6 mb-6 mt-4">
-					<Label>
-						{#each configuration.ignoredUsers as ignored}
-							<Badge>
-								{userMapping.get(ignored)}
-							</Badge>
-						{/each}
-					</Label>
-				</div>
+				<MultiSelect class="mt-2" items={userMapping} bind:values={configuration.ignoredUsers} />
 			</TabItem>
 		</Tabs>
 	{:catch error}

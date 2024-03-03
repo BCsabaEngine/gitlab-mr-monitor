@@ -49,37 +49,3 @@ export const setConfigurationStoreValue = (configuration: Configuration) =>
 	configurationStore.set(configuration);
 export const updateConfigurationStoreValue = (updater: Updater<Configuration>) =>
 	configurationStore.update(updater);
-
-export const dummyScopes: Scope[] = [
-	{
-		name: 'Me as author',
-		mode: 'self-author',
-		enabled: true,
-		draft: true
-	},
-	{
-		name: 'Me as reviewer',
-		mode: 'self-reviewer',
-		enabled: true,
-		draft: true,
-		alert: true
-	},
-	{
-		name: 'Favorite projects',
-		mode: 'project',
-		enabled: true,
-		projects: ['805', '852', '47'],
-		alert: false,
-		days: 7,
-		draft: false
-	},
-	{
-		name: 'Alternate projects',
-		mode: 'project',
-		enabled: true,
-		projects: ['802', '852'],
-		alert: false,
-		days: 7,
-		draft: true
-	}
-];

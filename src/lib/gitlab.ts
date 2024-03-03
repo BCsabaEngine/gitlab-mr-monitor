@@ -1,4 +1,5 @@
 import {
+	AccessLevel,
 	type ExpandedUserSchema,
 	Gitlab,
 	type MergeRequestSchemaWithBasicLabels,
@@ -7,6 +8,8 @@ import {
 
 import { getLoginStoreValue } from '$stores/loginStore';
 import type { Scope } from '$types/Scope';
+
+import { daysBeforeNow } from './date';
 
 export const checkGitlabConnection = async (host: string, token: string) => {
 	const cli = new Gitlab({ host, token });
@@ -30,7 +33,16 @@ export const getProject = async (id: number): Promise<ProjectSchema> => {
 	return projectCache.get(id)!;
 };
 
-//export const glGroups = getGitlabClient().Groups.all({ showExpanded: false });
+export const glProjects = getConfiguredGitlabClient().Projects.all({
+	simple: true,
+	statistics: false,
+	membership: true,
+	minAccessLevel: AccessLevel.DEVELOPER,
+	withMergeRequestsEnabled: true,
+	lastActivityAfter: daysBeforeNow(60).toISOString(),
+	archived: false,
+	showExpanded: false
+});
 export const glUsers = getConfiguredGitlabClient().Users.all({ active: true, showExpanded: false });
 
 /* Once initialized promises */
@@ -46,11 +58,7 @@ export const generateMrPromisesFromScope = async (
 	user: ExpandedUserSchema
 ): Promise<MergeRequestSchemaWithBasicLabels[][]> => {
 	let updatedAfter: string | undefined;
-	if ('days' in scope && scope.days > 0) {
-		const today = new Date();
-		today.setDate(today.getDate() - scope.days);
-		updatedAfter = today.toISOString();
-	}
+	if ('days' in scope && scope.days > 0) updatedAfter = daysBeforeNow(scope.days).toISOString();
 
 	switch (scope.mode) {
 		case 'project':

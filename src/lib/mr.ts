@@ -2,6 +2,7 @@ import { type MergeRequestSchemaWithBasicLabels, type ProjectSchema } from '@git
 import dayjs from 'dayjs/esm';
 import relativeTime from 'dayjs/esm/plugin/relativeTime';
 
+import { getConfigurationStoreValue } from '$stores/configurationStore';
 import type { Scope } from '$types/Scope';
 
 import { getProject } from './gitlab';
@@ -62,10 +63,25 @@ export const postProcess = async (
 	scope: Scope,
 	mrs: MergeRequestSchemaWithBasicLabels[][]
 ): Promise<MergeRequest[]> => {
+	const ignoredUsers = getConfigurationStoreValue().ignoredUsers;
 	const result: MergeRequest[] = [];
 
 	for (const mrg of mrs)
 		for (const mr of mrg) {
+			if (ignoredUsers.includes(mr.author.id)) continue;
+			if (mr.assignee && ignoredUsers.includes(mr.assignee.id)) continue;
+			if (mr.assignees)
+				for (const assignee of mr.assignees) if (ignoredUsers.includes(assignee.id)) continue;
+
+			if ('onlyUsers' in scope && scope.onlyUsers.length > 0) {
+				let match = false;
+				match ||= scope.onlyUsers.includes(mr.author.id);
+				if (mr.assignee) match ||= scope.onlyUsers.includes(mr.assignee.id);
+				if (mr.assignees)
+					for (const assignee of mr.assignees) match ||= scope.onlyUsers.includes(assignee.id);
+				if (!match) continue;
+			}
+
 			if (mr.draft && !scope.draft) continue;
 			if (result.some((m) => m.id === mr.id)) continue;
 			result.push({
