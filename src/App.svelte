@@ -35,6 +35,9 @@
 	import AppLoading from './components/appStatusCards/AppLoading.svelte';
 	import MrList from './components/MrList.svelte';
 
+	/*global __BASE_URL__*/
+	const BASE_URL = __BASE_URL__;
+
 	let appMrList: MrList;
 	let countMr: number = 0;
 	let isBackground = true;
@@ -82,7 +85,7 @@
 	<Navbar let:NavContainer color="none">
 		<NavContainer class="border px-5 py-2 lg bg-white dark:bg-gray-600">
 			<div class="flex items-left md:order-2">
-				<img src="/favicon.png" class="me-3 h-6 sm:h-9" alt="MR monitor" />
+				<img src="{BASE_URL}/favicon.png" class="me-3 h-6 sm:h-9" alt="MR monitor" />
 				<span class="self-center whitespace-nowrap text-xl font-semibold dark:text-white"
 					>Gitlab MR monitor</span
 				>
