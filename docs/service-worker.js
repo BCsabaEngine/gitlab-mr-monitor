@@ -2,12 +2,13 @@ const GHPATH = 'https://bcsabaengine.github.io/gitlab-mr-monitor/';
 
 const APP_PREFIX = 'gitlab-mr-monitor_';
 
-const VERSION = 'v1.0.1';
+const VERSION = 'v1.0.2';
 
 // The files to make available for offline use. make sure to add others to this list
 const URLS = [
 	`${GHPATH}/`,
 	`${GHPATH}/index.html`,
+	`${GHPATH}/notification.mp3`,
 	`${GHPATH}/favicon.png`,
 	`${GHPATH}/gitlab-256.png`,
 	`${GHPATH}/gitlab-512.png`,
