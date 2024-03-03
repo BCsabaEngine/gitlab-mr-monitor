@@ -1,20 +1,26 @@
-import { type MergeRequestSchemaWithBasicLabels, type ProjectSchema } from '@gitbeaker/rest';
+import {
+	type MergeRequestSchemaWithBasicLabels,
+	type PipelineSchema,
+	type ProjectSchema
+} from '@gitbeaker/rest';
 import dayjs from 'dayjs/esm';
 import relativeTime from 'dayjs/esm/plugin/relativeTime';
 
 import { getConfigurationStoreValue } from '$stores/configurationStore';
 import type { Scope } from '$types/Scope';
 
-import { getProject } from './gitlab';
+import { getGlLastPipeline, getGlProject } from './gitlab';
 
 dayjs.extend(relativeTime);
 
 export type LazyProjectSchema = Promise<ProjectSchema>;
+export type LazyPipelineSchema = Promise<PipelineSchema[]>;
 
 export type MergeRequest = MergeRequestSchemaWithBasicLabels & {
 	project: LazyProjectSchema;
 	projectNameToSort?: string;
 	merge_status_human: MergeRequestStatusHuman;
+	pipeline: LazyPipelineSchema;
 	createdFromNow: string;
 	updatedFromNow: string;
 };
@@ -23,7 +29,7 @@ export type MergeRequestStatusHuman = {
 	status: string;
 	level: 'none' | 'success' | 'warning' | 'error';
 };
-const statusToHuman = (
+const mrStatusToHuman = (
 	status:
 		| 'blocked_status'
 		| 'broken_status'
@@ -59,6 +65,35 @@ const statusToHuman = (
 	return { status: '', level: 'none' };
 };
 
+export type PipelineStatusHuman = MergeRequestStatusHuman;
+export const pipelineStatusToHuman = (status: string): PipelineStatusHuman => {
+	switch (status) {
+		case 'created':
+			return { status: 'Created', level: 'none' };
+		case 'waiting_for_resource':
+			return { status: 'Resource waiting', level: 'none' };
+		case 'preparing':
+			return { status: 'Preparing', level: 'none' };
+		case 'pending':
+			return { status: 'Pending', level: 'none' };
+		case 'running':
+			return { status: 'Running', level: 'none' };
+		case 'success':
+			return { status: 'Success', level: 'success' };
+		case 'failed':
+			return { status: 'Failed', level: 'error' };
+		case 'canceled':
+			return { status: 'Canceled', level: 'warning' };
+		case 'skipped':
+			return { status: 'Skipped', level: 'none' };
+		case 'manual':
+			return { status: 'Manual', level: 'none' };
+		case 'scheduled':
+			return { status: 'Scheduled', level: 'none' };
+	}
+	return { status, level: 'none' };
+};
+
 export const postProcess = async (
 	scope: Scope,
 	mrs: MergeRequestSchemaWithBasicLabels[][]
@@ -87,8 +122,9 @@ export const postProcess = async (
 			result.push({
 				...mr,
 				title: mr.title.replace(/^draft:/i, '').trim(),
-				project: getProject(mr.project_id),
-				merge_status_human: statusToHuman(mr.detailed_merge_status),
+				project: getGlProject(mr.project_id),
+				pipeline: getGlLastPipeline(mr.project_id, mr.sha),
+				merge_status_human: mrStatusToHuman(mr.detailed_merge_status),
 				createdFromNow: dayjs().from(dayjs(mr.created_at), true),
 				updatedFromNow: dayjs().from(dayjs(mr.updated_at), true)
 			});

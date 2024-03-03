@@ -28,10 +28,13 @@ export const getConfiguredGitlabClient = () => {
 };
 
 const projectCache: Map<number, Promise<ProjectSchema>> = new Map<number, Promise<ProjectSchema>>();
-export const getProject = async (id: number): Promise<ProjectSchema> => {
+export const getGlProject = async (id: number): Promise<ProjectSchema> => {
 	if (!projectCache.has(id)) projectCache.set(id, getConfiguredGitlabClient().Projects.show(id));
 	return projectCache.get(id)!;
 };
+
+export const getGlLastPipeline = (projectId: number, sha: string) =>
+	getConfiguredGitlabClient().Pipelines.all(projectId, { showExpanded: false, sha });
 
 /* Once initialized promises */
 const getGlProjects = () =>
