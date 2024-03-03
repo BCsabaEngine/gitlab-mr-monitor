@@ -1,5 +1,5 @@
 {
-	"name": "Merge Request monitor",
+	"name": "Gitlab MR monitor",
 	"short_name": "gitlab-mr-monitor",
 	"scope": "/gitlab-mr-monitor/",
 	"start_url": "https://bcsabaengine.github.io/gitlab-mr-monitor/",
