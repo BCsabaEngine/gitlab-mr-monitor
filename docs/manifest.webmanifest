@@ -2,7 +2,7 @@
 	"name": "Merge Request monitor",
 	"short_name": "gitlab-mr-monitor",
 	"scope": "/gitlab-mr-monitor/",
-	"start_url": "https://segmentcontroller.github.io/gitlab-mr-monitor/",
+	"start_url": "https://bcsabaengine.github.io/gitlab-mr-monitor/",
 	"icons": [
 		{
 			"src": "/gitlab-mr-monitor/gitlab-512.png",

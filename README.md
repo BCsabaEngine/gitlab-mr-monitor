@@ -1,8 +1,6 @@
-# PCB THT holder
+# Gitlab MR monitor
 
-[Changelog](CHANGELOG.md)
-
-3D STL file generator for THT PCB panels, online access: https://segmentcontroller.github.io/gitlab-mr-monitor/
+Gitlab MergeRequest monitor, online access: https://bcsabaengine.github.io/gitlab-mr-monitor/
 
 I make almost all of my printed circuit boards with online design software and entrust the manufacturing company to install the SMD components. I install the THT (through hole technology) components at home for two reasons:
 
@@ -21,7 +19,7 @@ In its current state, it facilitates the installation of circular and oblong com
 
 ## Try yout first PCB to STL
 
-Click here: https://segmentcontroller.github.io/gitlab-mr-monitor/
+Click here: https://bcsabaengine.github.io/gitlab-mr-monitor/
 
 ### Set up a PCB image
 

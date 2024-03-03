@@ -1,4 +1,4 @@
-const GHPATH = 'https://segmentcontroller.github.io/gitlab-mr-monitor/';
+const GHPATH = 'https://bcsabaengine.github.io/gitlab-mr-monitor/';
 
 const APP_PREFIX = 'pwa_mr-monitor_';
 
