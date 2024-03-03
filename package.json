@@ -1,6 +1,6 @@
 {
 	"name": "gitlab-mr-monitor",
-	"version": "1.0.0s",
+	"version": "1.0.0",
 	"type": "module",
 	"main": "build/index.js",
 	"engines": {

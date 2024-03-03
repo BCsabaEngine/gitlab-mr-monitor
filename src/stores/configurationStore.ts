@@ -19,17 +19,17 @@ const defaultSelfReviewer: Scope = {
 };
 const emptyConfiguration: Configuration = {
 	ignoredUsers: [],
-	scopes: [defaultSelfAuthor, defaultSelfReviewer]
+	scopes: [defaultSelfReviewer, defaultSelfAuthor]
 };
 
 export const configurationJsonSerializer = {
 	parse: (text: string) => {
 		try {
 			const config = Configuration.parse(JSON.parse(text));
-			if (!config.scopes.some((s) => s.mode === 'self-author'))
-				config.scopes.push(defaultSelfAuthor);
 			if (!config.scopes.some((s) => s.mode === 'self-reviewer'))
 				config.scopes.push(defaultSelfReviewer);
+			if (!config.scopes.some((s) => s.mode === 'self-author'))
+				config.scopes.push(defaultSelfAuthor);
 			return config;
 		} catch {
 			return emptyConfiguration;

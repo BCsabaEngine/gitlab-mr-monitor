@@ -34,7 +34,7 @@
 	};
 
 	onMount(() => {
-		scopes = $configurationStore.scopes;
+		scopes = $configurationStore.scopes.filter((s) => s.enabled);
 		controls = Array.from({ length: scopes.length });
 		counts = Array.from({ length: scopes.length });
 		counts.fill(0);

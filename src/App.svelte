@@ -35,12 +35,14 @@
 	import AppLoading from './components/appStatusCards/AppLoading.svelte';
 	import MrList from './components/MrList.svelte';
 
+	/*global __PKG_VERSION__*/
+	const PKG_VERSION = __PKG_VERSION__;
 	/*global __BASE_URL__*/
 	const BASE_URL = __BASE_URL__;
 
 	let appMrList: MrList;
 	let countMr: number = 0;
-	let isBackground = true;
+	let isBackground = false;
 	let changedIndicator = false;
 
 	let refreshButtonDisabled: boolean = false;
@@ -75,6 +77,7 @@
 	}}
 	on:blur={() => (isBackground = true)}
 />
+
 <svelte:head>
 	<title
 		>{countMr > 0 ? `(${countMr}${changedIndicator ? '!' : ''}) - ` : ''}Gitlab MR monitor</title
@@ -85,17 +88,25 @@
 	<Navbar let:NavContainer color="none">
 		<NavContainer class="border px-5 py-2 lg bg-white dark:bg-gray-600">
 			<div class="flex items-left md:order-2">
-				<img src="{BASE_URL}/favicon.png" class="me-3 h-6 sm:h-9" alt="MR monitor" />
-				<span class="self-center whitespace-nowrap text-xl font-semibold dark:text-white"
-					>Gitlab MR monitor</span
+				<img
+					src="{BASE_URL}/favicon.png"
+					class="me-3 h-6 sm:h-9"
+					alt="Gitlab MR monitor"
+					title={PKG_VERSION}
+				/>
+				<span
+					class="self-center whitespace-nowrap text-xl font-semibold dark:text-white"
+					title={PKG_VERSION}
 				>
+					Gitlab MR monitor
+				</span>
 				{#if countMr > 0 && !$loginMissing}
 					<Badge large border class="ml-4" color={countMr > 100 ? 'red' : 'green'}>
 						{#if countMr > 10}
 							<ExclamationCircleOutline class="mr-2" />
 						{/if}
-						<span class="text-lg">{countMr}</span></Badge
-					>
+						<span class="text-lg">{countMr}</span>
+					</Badge>
 				{/if}
 			</div>
 			<div class="flex items-center md:order-3">
@@ -110,7 +121,7 @@
 					{/if}
 				</NavUl>
 
-				<DarkMode size="sm" class="mr-2" />
+				<DarkMode class="mr-2" />
 
 				{#if !$loginMissing}
 					{#await glCurrentUser}

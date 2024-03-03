@@ -33,24 +33,30 @@ export const getProject = async (id: number): Promise<ProjectSchema> => {
 	return projectCache.get(id)!;
 };
 
-export const glProjects = getConfiguredGitlabClient().Projects.all({
-	simple: true,
-	statistics: false,
-	membership: true,
-	minAccessLevel: AccessLevel.DEVELOPER,
-	withMergeRequestsEnabled: true,
-	lastActivityAfter: daysBeforeNow(60).toISOString(),
-	archived: false,
-	showExpanded: false
-});
-export const glUsers = getConfiguredGitlabClient().Users.all({ active: true, showExpanded: false });
-
 /* Once initialized promises */
-export let glCurrentUser = getConfiguredGitlabClient().Users.showCurrentUser({
-	showExpanded: false
-});
+const getGlProjects = () =>
+	getConfiguredGitlabClient().Projects.all({
+		simple: true,
+		statistics: false,
+		membership: true,
+		minAccessLevel: AccessLevel.DEVELOPER,
+		withMergeRequestsEnabled: true,
+		lastActivityAfter: daysBeforeNow(60).toISOString(),
+		archived: false,
+		showExpanded: false
+	});
+const getGlUsers = () =>
+	getConfiguredGitlabClient().Users.all({ active: true, showExpanded: false });
+const getGlCurrentUser = () =>
+	getConfiguredGitlabClient().Users.showCurrentUser({ showExpanded: false });
+
+export let glCurrentUser = getGlCurrentUser();
+export let glUsers = getGlUsers();
+export let glProjects = getGlProjects();
 export const reloadInitial = () => {
-	glCurrentUser = getConfiguredGitlabClient().Users.showCurrentUser({ showExpanded: false });
+	glCurrentUser = getGlCurrentUser();
+	glUsers = getGlUsers();
+	glProjects = getGlProjects();
 };
 
 export const generateMrPromisesFromScope = async (
