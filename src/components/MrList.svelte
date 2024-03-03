@@ -7,6 +7,7 @@
 	import MrScope from './MrScope.svelte';
 	const dispatch = createEventDispatcher<{
 		count: number;
+		changed: void;
 	}>();
 
 	let lastRefreshIsBackground = false;
@@ -56,6 +57,8 @@
 		}}
 		on:alert={(alert) => {
 			if (alert.detail.sessionId !== refreshSessionId) return;
+
+			dispatch('changed');
 
 			if (refreshSessionIdAlertPlayed !== alert.detail.sessionId) {
 				playNotification();

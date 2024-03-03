@@ -19,12 +19,15 @@
 		Radio
 	} from 'flowbite-svelte';
 	import { CogOutline, ExclamationCircleOutline, RefreshOutline } from 'flowbite-svelte-icons';
+	import { onMount } from 'svelte';
 
 	import AppConfigMissing from '$components/appStatusCards/AppLoginMissing.svelte';
+	import { autoRefreshList } from '$lib/autoRefresh';
 	import { glCurrentUser } from '$lib/gitlab';
 	import { configurationStore } from '$stores/configurationStore';
 	import { loginMissing, resetLoginStoreValue } from '$stores/loginStore';
 	import { modalStore } from '$stores/modalStore';
+	import { refreshTimer } from '$stores/timerStore';
 	import { userPreferencesStore } from '$stores/userPreferencesStore';
 
 	import { openConfiguration } from './common/openConfiguration';
@@ -34,11 +37,15 @@
 
 	let appMrList: MrList;
 	let countMr: number = 0;
+	let isBackground = true;
+	let changedIndicator = false;
 
 	let refreshButtonDisabled: boolean = false;
 	let refreshSessionId = 0;
 	const refreshMrList = async (background: boolean) => {
 		if (!appMrList) return;
+		if (refreshButtonDisabled) return;
+
 		refreshButtonDisabled = true;
 		try {
 			refreshSessionId++;
@@ -48,24 +55,29 @@
 		}
 	};
 
-	const autoRefreshList = [
-		{ value: 0, name: 'Manual only' },
-		{ value: 30, name: '30 seconds' },
-		{ value: 60, name: '1 minute' },
-		{ value: 2 * 60, name: '2 minutes' },
-		{ value: 3 * 60, name: '3 minutes' },
-		{ value: 5 * 60, name: '5 minutes' },
-		{ value: 10 * 60, name: '10 minutes' },
-		{ value: 15 * 60, name: '15 minutes' },
-		{ value: 30 * 60, name: '30 minutes' }
-	];
+	const setChanged = (state: boolean) => (changedIndicator = isBackground && state);
+
+	onMount(() => {
+		return refreshTimer.subscribe(() => refreshMrList(true));
+	});
 </script>
 
 <svelte:window
 	use:shortcut={{
 		trigger: [{ key: 'r', modifier: [], callback: () => refreshMrList(true), preventDefault: true }]
 	}}
+	on:focus={() => {
+		isBackground = false;
+		setChanged(false);
+	}}
+	on:blur={() => (isBackground = true)}
 />
+<svelte:head>
+	<title
+		>{countMr > 0 ? `(${countMr}${changedIndicator ? '!' : ''}) - ` : ''}Gitlab MR monitor</title
+	>
+</svelte:head>
+
 <div class="bg-gray-200 dark:bg-gray-400 min-h-screen">
 	<Navbar let:NavContainer color="none">
 		<NavContainer class="border px-5 py-2 lg bg-white dark:bg-gray-600">
@@ -140,7 +152,11 @@
 					message="Now we query your identity. We ask for your patience..."
 				/>
 			{:then}
-				<MrList bind:this={appMrList} on:count={(count) => (countMr = count.detail)} />
+				<MrList
+					bind:this={appMrList}
+					on:count={(count) => (countMr = count.detail)}
+					on:changed={() => setChanged(true)}
+				/>
 			{:catch error}
 				<AppError
 					message={(error && error.cause && error.cause.description) ||
