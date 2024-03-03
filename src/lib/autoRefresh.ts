@@ -1,8 +1,5 @@
 export const autoRefreshList = [
 	{ value: 0, name: 'Manual only' },
-	{ value: 5, name: '5 seconds' },
-	{ value: 10, name: '10 seconds' },
-	{ value: 15, name: '15 seconds' },
 	{ value: 30, name: '30 seconds' },
 	{ value: 60, name: '1 minute' },
 	{ value: 2 * 60, name: '2 minutes' },

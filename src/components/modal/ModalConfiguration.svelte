@@ -64,6 +64,7 @@
 	};
 
 	let userMapping: Map<number, string> = new Map<number, string>();
+	// eslint-disable-next-line unicorn/prefer-top-level-await
 	glUsers.then((users) => {
 		userMapping.clear();
 		for (const user of users) userMapping.set(user.id, `${user.username} / ${user.name}`);
@@ -72,7 +73,7 @@
 	export let configuration: Configuration;
 </script>
 
-<Modal open={true} size="lg" dismissable={false} bodyClass="space-y-0 min-h-screen">
+<Modal open={true} size="lg" dismissable={false} bodyClass="space-y-0 min-h-96">
 	{#await glUsers}
 		<AppLoading
 			title="Init Gitlab settings"
@@ -81,13 +82,17 @@
 	{:then}
 		<AutoFocus />
 		<h3 class="mb-10 text-lg font-normal text-gray-500 dark:text-gray-400">Settings</h3>
-		<Tabs style="underline" contentClass="p-4 rounded-lg mt-4">
+		<div class="float-right">
+			<Button on:click={() => resolve(true)} color="green" class="me-2">OK</Button>
+			<Button on:click={() => resolve(false)} color="alternative" class="me-2">Cancel</Button>
+		</div>
+		<Tabs style="underline" contentClass="p-4 rounded-lg mt-4 min-h-80 overflow-y-auto">
 			<TabItem
 				open
 				title={`Scopes ${configuration.scopes.length > 0 ? configuration.scopes.length : ''}`}
 			>
 				<Button class="mb-2" size="sm" on:click={addNewScope}>New scope</Button>
-				<div class="flex flex-col h-64 overflow-y-auto">
+				<div class="flex flex-col">
 					{#each configuration.scopes as scope, index}
 						<SettingsScope
 							{scope}
@@ -107,7 +112,7 @@
 			>
 				<Helper ßclass="text-xs text-gray-600 mt-1 ml-2"
 					>You can specify the system-level users whose MR you don't want to deal with. Eg: renovate
-					bot or a CI bot</Helper
+					bot or a CI bot.</Helper
 				>
 				<div class="grid gap-6 mb-6 mt-4">
 					<Label>
@@ -120,11 +125,6 @@
 				</div>
 			</TabItem>
 		</Tabs>
-
-		<div class="absolute right-4 bottom-6">
-			<Button on:click={() => resolve(true)} color="green" class="me-2">OK</Button>
-			<Button on:click={() => resolve(false)} color="alternative" class="me-2">Cancel</Button>
-		</div>
 	{:catch error}
 		<AppError
 			message={(error && error.cause && error.cause.description) ||
