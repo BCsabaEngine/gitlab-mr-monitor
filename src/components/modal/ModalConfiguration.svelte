@@ -7,7 +7,7 @@
 	import MultiSelect, { type MultiSelectItem } from '$components/base/MultiSelect.svelte';
 	import AutoFocus from '$components/modal/util/AutoFocus.svelte';
 	import { swap } from '$lib/array';
-	import { glProjects, glUsers } from '$lib/gitlab';
+	import { glGroups, glProjects, glUsers } from '$lib/gitlab';
 	import { showModalNameEdit } from '$stores/modalStore';
 	import type { Configuration } from '$types/Configuration';
 	import type { Scope } from '$types/Scope';
@@ -54,6 +54,7 @@
 			configuration.scopes.push({
 				mode: 'project',
 				projects: [],
+				groups: [],
 				onlyUsers: [],
 				name: name.name,
 				enabled: true,
@@ -79,10 +80,10 @@
 </script>
 
 <Modal open={true} size="lg" dismissable={false} bodyClass="space-y-0 min-h-96">
-	{#await Promise.all([glUsers, glProjects])}
+	{#await Promise.all([glUsers, glProjects, glGroups])}
 		<AppLoading
 			title="Init Gitlab settings"
-			message="Now we query the users and projects. We ask for your patience..."
+			message="Now we query the groups, projects and users. We ask for your patience..."
 		/>
 	{:then}
 		<AutoFocus />

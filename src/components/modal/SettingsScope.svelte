@@ -13,7 +13,7 @@
 
 	import NumberInputBound from '$components/base/input/NumberInputBound.svelte';
 	import MultiSelect, { type MultiSelectItem } from '$components/base/MultiSelect.svelte';
-	import { glProjects, glUsers } from '$lib/gitlab';
+	import { glGroups, glProjects, glUsers } from '$lib/gitlab';
 	import { showModalNameEdit } from '$stores/modalStore';
 	import type { Scope } from '$types/Scope';
 
@@ -48,6 +48,15 @@
 			id: p.id,
 			label: p.name,
 			tooltip: p.name_with_namespace
+		}));
+	});
+
+	let groupMapping: MultiSelectItem[] = [];
+	// eslint-disable-next-line unicorn/prefer-top-level-await
+	glGroups.then((groups) => {
+		groupMapping = groups.map((g) => ({
+			id: g.id,
+			label: g.full_name
 		}));
 	});
 </script>
@@ -126,31 +135,64 @@
 		{/if}
 	</div>
 	{#if scope.enabled}
-		{#if 'onlyUsers' in scope && 'projects' in scope}
+		{@const multiselects = 'groups' in scope || 'projects' in scope || 'onlyUsers' in scope}
+		{#if multiselects}
 			<Accordion flush>
-				<AccordionItem>
-					<span slot="header">
-						{scope.projects.length > 0
-							? `${scope.projects.length} projects selected`
-							: 'No project selected'}
-					</span>
-					<Helper class="text-xs text-gray-600"
-						>You must select one or more projects whose MRs are displayed in this group.</Helper
-					>
-					<MultiSelect class="mt-2" items={projectMapping} bind:values={scope.projects} />
-				</AccordionItem>
-				<AccordionItem>
-					<span slot="header">
-						{scope.onlyUsers.length > 0
-							? `Only ${scope.onlyUsers.length} users' MRs are visible`
-							: "Every user's MR is visible"}
-					</span>
-					<Helper class="text-xs text-gray-600"
-						>You can set which users' MR you only want to see. It is useful if many of you work on a
-						common repo.</Helper
-					>
-					<MultiSelect class="mt-2" items={userMapping} bind:values={scope.onlyUsers} />
-				</AccordionItem>
+				{#if 'groups' in scope && 'projects' in scope}
+					<AccordionItem>
+						<span slot="header" class="text-sm">
+							{scope.groups.length > 0
+								? `${scope.groups.length} groups selected`
+								: 'No group selected'}
+						</span>
+						<Helper class="text-xs text-gray-600"
+							>You must select one (or more) groups whose MRs are displayed in this scope. This
+							group can also be the top level group. Don't select many groups, choose a higher level
+							group instead!</Helper
+						>
+						<MultiSelect
+							class="mt-2"
+							items={groupMapping}
+							bind:values={scope.groups}
+							on:count={(event) => {
+								if (event.detail > 0 && 'projects' in scope) scope.projects = [];
+							}}
+						/>
+					</AccordionItem>
+					<AccordionItem>
+						<span slot="header" class="text-sm">
+							{scope.projects.length > 0
+								? `${scope.projects.length} projects selected`
+								: 'No project selected'}
+						</span>
+						<Helper class="text-xs text-gray-600"
+							>You must select one or more projects whose MRs are displayed in this scope. Don't
+							select many projects, choose a group that they belong to!</Helper
+						>
+						<MultiSelect
+							class="mt-2"
+							items={projectMapping}
+							bind:values={scope.projects}
+							on:count={(event) => {
+								if (event.detail > 0 && 'groups' in scope) scope.groups = [];
+							}}
+						/>
+					</AccordionItem>
+				{/if}
+				{#if 'onlyUsers' in scope}
+					<AccordionItem>
+						<span slot="header" class="text-sm">
+							{scope.onlyUsers.length > 0
+								? `Only ${scope.onlyUsers.length} users' MRs are visible`
+								: "Every user's MR is visible"}
+						</span>
+						<Helper class="text-xs text-gray-600"
+							>You can set which users' MR you only want to see. It is useful if many of you work on
+							a common repo with a small team.</Helper
+						>
+						<MultiSelect class="mt-2" items={userMapping} bind:values={scope.onlyUsers} />
+					</AccordionItem>
+				{/if}
 			</Accordion>
 		{/if}
 	{/if}

@@ -15,6 +15,11 @@
 		CloseOutline,
 		FileCopyOutline
 	} from 'flowbite-svelte-icons';
+	import { createEventDispatcher } from 'svelte';
+
+	const dispatch = createEventDispatcher<{
+		count: number;
+	}>();
 
 	export let values: Id[];
 	export let items: MultiSelectItem[];
@@ -36,6 +41,7 @@
 			return sa.localeCompare(sb);
 		});
 		values = values;
+		dispatch('count', values.length);
 	};
 
 	const remove = (id: Id) => {
@@ -44,6 +50,7 @@
 
 		values.splice(index, 1);
 		values = values;
+		dispatch('count', values.length);
 	};
 
 	const copy = () => navigator.clipboard.writeText(values.join(','));

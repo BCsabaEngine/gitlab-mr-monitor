@@ -50,16 +50,19 @@ const getGlProjects = () =>
 	});
 const getGlUsers = () =>
 	getConfiguredGitlabClient().Users.all({ active: true, showExpanded: false });
+const getGlGroups = () => getConfiguredGitlabClient().Groups.all({ showExpanded: false });
 const getGlCurrentUser = () =>
 	getConfiguredGitlabClient().Users.showCurrentUser({ showExpanded: false });
 
 export let glCurrentUser = getGlCurrentUser();
 export let glUsers = getGlUsers();
 export let glProjects = getGlProjects();
+export let glGroups = getGlGroups();
 export const reloadInitial = () => {
 	glCurrentUser = getGlCurrentUser();
 	glUsers = getGlUsers();
 	glProjects = getGlProjects();
+	glGroups = getGlGroups();
 };
 
 export const generateMrPromisesFromScope = async (
@@ -70,28 +73,57 @@ export const generateMrPromisesFromScope = async (
 	if ('days' in scope && scope.days > 0) updatedAfter = daysBeforeNow(scope.days).toISOString();
 
 	switch (scope.mode) {
-		case 'project':
-			return await Promise.all(
-				scope.projects.map(async (p) =>
-					getConfiguredGitlabClient().MergeRequests.all({
-						projectId: p,
-						state: 'opened',
-						updatedAfter
-					})
-				)
-			);
+		case 'project': {
+			if (scope.groups.length > 0)
+				return await Promise.all(
+					scope.groups.map(async (g) =>
+						getConfiguredGitlabClient().MergeRequests.all({
+							groupId: g,
+							state: 'opened',
+							updatedAfter
+						})
+					)
+				);
+			if (scope.projects.length > 0)
+				return await Promise.all(
+					scope.projects.map(async (p) =>
+						getConfiguredGitlabClient().MergeRequests.all({
+							projectId: p,
+							state: 'opened',
+							updatedAfter
+						})
+					)
+				);
+			return await Promise.all([]);
+		}
 		case 'self-author':
 			return [
 				await getConfiguredGitlabClient().MergeRequests.all({
 					state: 'opened'
 				})
 			];
-		case 'self-reviewer':
-			return [
-				await getConfiguredGitlabClient().MergeRequests.all({
-					state: 'opened',
-					reviewerId: user.id
-				})
-			];
+		case 'self-reviewer': {
+			if (scope.groups.length > 0)
+				return await Promise.all(
+					scope.groups.map(async (g) =>
+						getConfiguredGitlabClient().MergeRequests.all({
+							state: 'opened',
+							groupId: g,
+							reviewerId: user.id
+						})
+					)
+				);
+			if (scope.projects.length > 0)
+				return await Promise.all(
+					scope.projects.map(async (p) =>
+						getConfiguredGitlabClient().MergeRequests.all({
+							state: 'opened',
+							projectId: p,
+							reviewerId: user.id
+						})
+					)
+				);
+			return await Promise.all([]);
+		}
 	}
 };

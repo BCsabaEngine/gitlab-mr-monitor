@@ -14,6 +14,8 @@ const defaultSelfAuthor: Scope = {
 const defaultSelfReviewer: Scope = {
 	mode: 'self-reviewer',
 	name: 'Me as reviewer',
+	projects: [],
+	groups: [],
 	enabled: true,
 	draft: false,
 	alert: true,
