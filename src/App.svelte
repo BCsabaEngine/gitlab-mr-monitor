@@ -18,7 +18,7 @@
 		NavUl,
 		Radio
 	} from 'flowbite-svelte';
-	import { CogOutline, ExclamationCircleOutline, RefreshOutline } from 'flowbite-svelte-icons';
+	import { CogOutline, RefreshOutline } from 'flowbite-svelte-icons';
 	import { onMount } from 'svelte';
 
 	import AppConfigMissing from '$components/appStatusCards/AppLoginMissing.svelte';
@@ -101,10 +101,7 @@
 					Gitlab MR monitor
 				</span>
 				{#if countMr > 0 && !$loginMissing}
-					<Badge large border class="ml-4" color={countMr > 100 ? 'red' : 'green'}>
-						{#if countMr > 10}
-							<ExclamationCircleOutline class="mr-2" />
-						{/if}
+					<Badge large border class="ml-4" color="dark">
 						<span class="text-lg">{countMr}</span>
 					</Badge>
 				{/if}
