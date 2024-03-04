@@ -1,5 +1,13 @@
 <script lang="ts">
-	import { Accordion, AccordionItem, Card, Helper, Toggle } from 'flowbite-svelte';
+	import {
+		Accordion,
+		AccordionItem,
+		Button,
+		Card,
+		Dropdown,
+		Helper,
+		Toggle
+	} from 'flowbite-svelte';
 	import { ArrowDownOutline, ArrowUpOutline, TrashBinSolid } from 'flowbite-svelte-icons';
 	import { createEventDispatcher } from 'svelte';
 
@@ -44,7 +52,7 @@
 	});
 </script>
 
-<Card class="max-w-full flex flex-col mb-2 p-0">
+<Card class="max-w-full flex flex-col my-2 p-0">
 	<div class="flex flex-row justify-between">
 		<div class="flex flex-row gap-2 my-1">
 			{#if !isFirst}
@@ -73,20 +81,38 @@
 		</div>
 		{#if scope.enabled}
 			<div class="flex flex-row gap-8">
-				{#if 'days' in scope}
-					<NumberInputBound
-						class="w-14"
-						size="sm"
-						metric="days"
-						bind:value={scope.days}
-						min={0}
-						max={60}
-					/>
-				{/if}
-				{#if 'alert' in scope}
-					<Toggle disabled size="small" bind:checked={scope.alert}>Alert</Toggle>
-				{/if}
-				<Toggle size="small" bind:checked={scope.draft}>Draft</Toggle>
+				<Button color="light" size="xs">Options</Button>
+				<Dropdown class="w-60 p-3 space-y-1">
+					<li>
+						<Toggle class="p-2" size="small" bind:checked={scope.draft}>Display draft MRs</Toggle>
+					</li>
+					<li>
+						<Toggle class="p-2 pt-4" size="small" bind:checked={scope.pipeline}
+							>Query pipeline status</Toggle
+						>
+					</li>
+					{#if 'alert' in scope}
+						<li>
+							<Toggle class="p-2 pt-4" size="small" bind:checked={scope.alert}
+								>Play audio alert</Toggle
+							>
+						</li>
+					{/if}
+					{#if 'days' in scope}
+						<li>
+							<Helper class="ps-6x">How long to show MRs</Helper>
+							<NumberInputBound
+								class="ml-16 w-14"
+								size="sm"
+								metric="days"
+								bind:value={scope.days}
+								min={0}
+								max={60}
+							/>
+						</li>
+					{/if}
+				</Dropdown>
+
 				{#if allowDelete}
 					<TrashBinSolid
 						size="sm"
@@ -107,10 +133,10 @@
 						{scope.projects.length > 0
 							? `${scope.projects.length} projects selected`
 							: 'No project selected'}
-						<Helper class="text-xs text-gray-600 mt-1 ml-2"
-							>You must select one or more projects whose MRs are displayed in this group.</Helper
-						>
 					</span>
+					<Helper class="text-xs text-gray-600"
+						>You must select one or more projects whose MRs are displayed in this group.</Helper
+					>
 					<MultiSelect class="mt-2" items={projectMapping} bind:values={scope.projects} />
 				</AccordionItem>
 				<AccordionItem>
@@ -118,11 +144,11 @@
 						{scope.onlyUsers.length > 0
 							? `Only ${scope.onlyUsers.length} users' MRs are visible`
 							: "Every user's MR is visible"}
-						<Helper class="text-xs text-gray-600 mt-1 ml-2"
-							>You can set which users' MR you only want to see. It is useful if many of you work on
-							a common repo.</Helper
-						>
 					</span>
+					<Helper class="text-xs text-gray-600"
+						>You can set which users' MR you only want to see. It is useful if many of you work on a
+						common repo.</Helper
+					>
 					<MultiSelect class="mt-2" items={userMapping} bind:values={scope.onlyUsers} />
 				</AccordionItem>
 			</Accordion>

@@ -59,7 +59,8 @@
 				enabled: true,
 				days: 7,
 				draft: false,
-				alert: true
+				alert: true,
+				pipeline: false
 			});
 			configuration.scopes = configuration.scopes;
 		}

@@ -20,7 +20,7 @@ export type MergeRequest = MergeRequestSchemaWithBasicLabels & {
 	project: LazyProjectSchema;
 	projectNameToSort?: string;
 	merge_status_human: MergeRequestStatusHuman;
-	pipeline: LazyPipelineSchema;
+	pipeline?: LazyPipelineSchema;
 	createdFromNow: string;
 	updatedFromNow: string;
 };
@@ -123,7 +123,7 @@ export const postProcess = async (
 				...mr,
 				title: mr.title.replace(/^draft:/i, '').trim(),
 				project: getGlProject(mr.project_id),
-				pipeline: getGlLastPipeline(mr.project_id, mr.sha),
+				pipeline: scope.pipeline ? getGlLastPipeline(mr.project_id, mr.sha) : undefined,
 				merge_status_human: mrStatusToHuman(mr.detailed_merge_status),
 				createdFromNow: dayjs().from(dayjs(mr.created_at), true),
 				updatedFromNow: dayjs().from(dayjs(mr.updated_at), true)

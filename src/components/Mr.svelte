@@ -9,7 +9,7 @@
 		PlayOutline
 	} from 'flowbite-svelte-icons';
 
-	import { type MergeRequest,pipelineStatusToHuman } from '$lib/mr';
+	import { type MergeRequest, pipelineStatusToHuman } from '$lib/mr';
 
 	export let mr: MergeRequest;
 </script>
@@ -81,30 +81,32 @@
 		<ClockOutline size="sm" class="mt-0.5" />
 		{mr.updatedFromNow} ago
 	</div>
-	<div class="flex gap-1 text-sm mx-2">
-		<PlayOutline size="sm" class="mt-0.5" />
-		{#await mr.pipeline}
-			...
-		{:then pipeline}
-			{#if pipeline.length > 0}
-				{@const plStatusHuman = pipelineStatusToHuman(pipeline[0].status)}
-				<span
-					class={plStatusHuman.level === 'error'
-						? 'text-red-600'
-						: plStatusHuman.level === 'warning'
-							? 'text-yellow-600'
-							: plStatusHuman.level === 'success'
-								? 'text-green-600'
-								: ''}
-				>
-					{plStatusHuman.status}
-				</span>
-				pipeline
-			{:else}
-				No pipeline
-			{/if}
-		{/await}
-	</div>
+	{#if mr.pipeline}
+		<div class="flex gap-1 text-sm mx-2">
+			<PlayOutline size="sm" class="mt-0.5" />
+			{#await mr.pipeline}
+				...
+			{:then pipeline}
+				{#if pipeline.length > 0}
+					{@const plStatusHuman = pipelineStatusToHuman(pipeline[0].status)}
+					<span
+						class={plStatusHuman.level === 'error'
+							? 'text-red-600'
+							: plStatusHuman.level === 'warning'
+								? 'text-yellow-600'
+								: plStatusHuman.level === 'success'
+									? 'text-green-600'
+									: ''}
+					>
+						{plStatusHuman.status}
+					</span>
+					pipeline
+				{:else}
+					No pipeline
+				{/if}
+			{/await}
+		</div>
+	{/if}
 	<div class="flex place-self-end">
 		{#each mr.labels as label}
 			<Badge color="dark" class="ml-1">{label}</Badge>

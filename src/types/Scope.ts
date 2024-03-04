@@ -3,7 +3,8 @@ import { z } from 'zod';
 export const BaseScope = z.object({
 	name: z.string(),
 	enabled: z.boolean(),
-	draft: z.boolean().default(false)
+	draft: z.boolean().default(false),
+	pipeline: z.boolean().default(false)
 });
 
 export const BaseAlertScope = z.intersection(

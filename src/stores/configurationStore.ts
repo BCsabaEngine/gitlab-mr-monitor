@@ -8,14 +8,16 @@ const defaultSelfAuthor: Scope = {
 	mode: 'self-author',
 	name: 'Me as author',
 	enabled: true,
-	draft: false
+	draft: false,
+	pipeline: true
 };
 const defaultSelfReviewer: Scope = {
 	mode: 'self-reviewer',
 	name: 'Me as reviewer',
 	enabled: true,
 	draft: false,
-	alert: true
+	alert: true,
+	pipeline: true
 };
 const emptyConfiguration: Configuration = {
 	ignoredUsers: [],
