@@ -74,8 +74,15 @@
 	<div class="flex gap-1 text-sm mx-2">
 		<CodeBranchSolid size="sm" class="mt-0.5" />
 		{mr.source_branch}
-		<ArrowRightSolid />
-		{mr.target_branch}
+		{#await mr.project}
+			<ArrowRightSolid />
+			{mr.target_branch}
+		{:then project}
+			{#if mr.target_branch !== project.default_branch}
+				<ArrowRightSolid />
+				{mr.target_branch}
+			{/if}
+		{/await}
 	</div>
 	<div class="flex gap-1 text-sm mx-2">
 		<ClockOutline size="sm" class="mt-0.5" />
