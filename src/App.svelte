@@ -8,7 +8,6 @@
 		Avatar,
 		Badge,
 		Button,
-		DarkMode,
 		Dropdown,
 		DropdownHeader,
 		DropdownItem,
@@ -21,8 +20,13 @@
 	import { CogOutline, RefreshOutline } from 'flowbite-svelte-icons';
 	import { onMount } from 'svelte';
 
+	import AppError from '$components/appStatusCards/AppError.svelte';
+	import AppLoading from '$components/appStatusCards/AppLoading.svelte';
 	import AppConfigMissing from '$components/appStatusCards/AppLoginMissing.svelte';
+	import IsBackground, { isBackground } from '$components/base/IsBackground.svelte';
+	import MrList from '$components/MrList.svelte';
 	import { autoRefreshList } from '$lib/autoRefresh';
+	import { toggleDark } from '$lib/darkMode';
 	import { glCurrentUser } from '$lib/gitlab';
 	import { configurationStore } from '$stores/configurationStore';
 	import { hiddenIdsLength, resetHiddenIdsStoreValue } from '$stores/hiddenIds';
@@ -32,10 +36,6 @@
 	import { userPreferencesStore } from '$stores/userPreferencesStore';
 
 	import { openConfiguration } from './common/openConfiguration';
-	import AppError from './components/appStatusCards/AppError.svelte';
-	import AppLoading from './components/appStatusCards/AppLoading.svelte';
-	import IsBackground, { isBackground } from './components/base/IsBackground.svelte';
-	import MrList from './components/MrList.svelte';
 
 	/*global __PKG_VERSION__*/
 	const PKG_VERSION = __PKG_VERSION__;
@@ -62,7 +62,6 @@
 	};
 
 	const setChanged = (state: boolean) => (changedIndicator = $isBackground && state);
-
 	onMount(() => {
 		return refreshTimer.subscribe(() => refreshMrList(true));
 	});
@@ -118,8 +117,6 @@
 					{/if}
 				</NavUl>
 
-				<DarkMode class="mr-2" />
-
 				{#if !$loginMissing}
 					{#await glCurrentUser}
 						<Avatar id="avatar-currentuser" />
@@ -150,6 +147,7 @@
 									</li>
 								{/each}
 							</Dropdown>
+							<DropdownItem on:click={() => toggleDark()}>Dark mode</DropdownItem>
 							<DropdownItem on:click={() => openConfiguration()}>Settings</DropdownItem>
 							<DropdownItem on:click={() => resetLoginStoreValue()}>Logout</DropdownItem>
 						</Dropdown>

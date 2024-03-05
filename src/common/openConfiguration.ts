@@ -1,8 +1,7 @@
+import { reloadInitial as reloadInitialGitlabData } from '$lib/gitlab';
 import { getConfigurationStoreValue, setConfigurationStoreValue } from '$stores/configurationStore';
 import { getLoginStoreValue, setLoginStoreValue } from '$stores/loginStore';
 import { showModalConfiguration, showModalLogin } from '$stores/modalStore';
-
-import { reloadInitial as reloadInitialGitlabData } from '../lib/gitlab';
 
 export const openLogin = async () => {
 	const loginSource = structuredClone(getLoginStoreValue());
