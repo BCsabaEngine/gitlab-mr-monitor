@@ -11,6 +11,7 @@ import { getConfigurationStoreValue } from '$stores/configurationStore';
 import type { Scope } from '$types/Scope';
 
 import { getGlLastPipeline, getGlProject } from './gitlab';
+import { isMrHidden } from './hiddenMr';
 
 dayjs.extend(relativeTime);
 
@@ -105,6 +106,7 @@ export const postProcess = async (
 
 	for (const mrg of mrs)
 		for (const mr of mrg) {
+			if (isMrHidden(mr.id)) continue;
 			if (mr.draft && !scope.draft) continue;
 			if (result.some((m) => m.id === mr.id)) continue;
 

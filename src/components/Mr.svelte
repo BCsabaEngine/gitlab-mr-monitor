@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Avatar, Badge, Card, Tooltip } from 'flowbite-svelte';
+	import { Avatar, Badge, Card, CloseButton, Tooltip } from 'flowbite-svelte';
 	import { Toolbar, ToolbarGroup } from 'flowbite-svelte';
 	import {
 		ArrowRightSolid,
@@ -8,8 +8,13 @@
 		InfoCircleOutline,
 		PlayOutline
 	} from 'flowbite-svelte-icons';
+	import { createEventDispatcher } from 'svelte';
 
 	import { type MergeRequest, pipelineStatusToHuman } from '$lib/mr';
+
+	const dispatch = createEventDispatcher<{
+		close: number;
+	}>();
 
 	export let mr: MergeRequest;
 </script>
@@ -17,6 +22,12 @@
 <Card class="max-w-full min-h-32 max-h-52 flex flex-col sm:p-0 sm:px-6 sm:pb-6">
 	<Toolbar class="px-0 pb-0">
 		<ToolbarGroup>
+			<CloseButton
+				size="sm"
+				on:click={() => {
+					dispatch('close', mr.id);
+				}}
+			/>
 			{#await mr.project}
 				...
 			{:then project}

@@ -109,12 +109,14 @@
 			<div class="flex items-center md:order-3">
 				<NavUl>
 					{#if !$loginMissing}
-						<Button size="md" disabled={refreshButtonDisabled} on:click={() => refreshMrList(true)}
-							><RefreshOutline class="mr-1" />Refresh <Kbd class="ml-2 px-2">R</Kbd></Button
-						>
-						<Button color="alternative" class="flex" size="md" on:click={() => openConfiguration()}
-							><CogOutline class="mr-1" />Settings</Button
-						>
+						<Button size="md" disabled={refreshButtonDisabled} on:click={() => refreshMrList(true)}>
+							<RefreshOutline class="mr-1" />
+							Refresh
+							<Kbd class="ml-2 px-2">R</Kbd>
+						</Button>
+						<Button color="none" size="xs" on:click={() => openConfiguration()}>
+							<CogOutline />
+						</Button>
 					{/if}
 				</NavUl>
 

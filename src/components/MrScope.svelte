@@ -4,6 +4,7 @@
 	import { createEventDispatcher, onMount } from 'svelte';
 
 	import { generateMrPromisesFromScope, glCurrentUser } from '$lib/gitlab';
+	import { hideMr } from '$lib/hiddenMr';
 	import { type MergeRequest, postProcess, sortByProjectAndTitle } from '$lib/mr';
 	import type { Scope } from '$types/Scope';
 
@@ -39,6 +40,15 @@
 	onMount(() => {
 		refresh(0, false);
 	});
+	const onRemove = (mrId: number) => {
+		hideMr(mrId);
+
+		const index = mrs.findIndex((mr) => mr.id === mrId);
+		if (index < 0) return;
+
+		mrs.splice(index, 1);
+		mrs = mrs;
+	};
 </script>
 
 {#await mrPromises then}
@@ -51,7 +61,7 @@
 			</span>
 			<div class="mt-2 grid md:grid-cols-2 lg:grid-cols-3 gap-4">
 				{#each mrs as mr (mr.id)}
-					<Mr {mr} />
+					<Mr {mr} on:close={(id) => onRemove(id.detail)} />
 				{/each}
 			</div>
 		</div>
