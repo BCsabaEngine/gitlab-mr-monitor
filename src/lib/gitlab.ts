@@ -36,6 +36,11 @@ export const getGlProject = async (id: number): Promise<ProjectSchema> => {
 export const getGlLastPipeline = (projectId: number, sha: string) =>
 	getConfiguredGitlabClient().Pipelines.all(projectId, { showExpanded: false, sha });
 
+export const getGlApprovalState = (projectId: number, mrIid: number) =>
+	getConfiguredGitlabClient().MergeRequestApprovals.showApprovalState(projectId, mrIid, {
+		showExpanded: false
+	});
+
 /* Once initialized promises */
 const getGlProjects = () =>
 	getConfiguredGitlabClient().Projects.all({
@@ -78,8 +83,8 @@ export const generateMrPromisesFromScope = async (
 				return await Promise.all(
 					scope.groups.map(async (g) =>
 						getConfiguredGitlabClient().MergeRequests.all({
-							groupId: g,
 							state: 'opened',
+							groupId: g,
 							updatedAfter
 						})
 					)
@@ -88,8 +93,8 @@ export const generateMrPromisesFromScope = async (
 				return await Promise.all(
 					scope.projects.map(async (p) =>
 						getConfiguredGitlabClient().MergeRequests.all({
-							projectId: p,
 							state: 'opened',
+							projectId: p,
 							updatedAfter
 						})
 					)

@@ -14,10 +14,13 @@ const defaultSelfAuthor: Scope = {
 const defaultSelfReviewer: Scope = {
 	mode: 'self-reviewer',
 	name: 'Me as reviewer',
+	enabled: true,
+
 	projects: [],
 	groups: [],
-	enabled: true,
+
 	draft: false,
+	hideMergeable: false,
 	alert: true,
 	pipeline: true
 };

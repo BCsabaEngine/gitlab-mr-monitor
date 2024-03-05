@@ -95,6 +95,13 @@
 					<li>
 						<Toggle class="p-2" size="small" bind:checked={scope.draft}>Display draft MRs</Toggle>
 					</li>
+					{#if 'hideMergeable' in scope}
+						<li>
+							<Toggle class="p-2 pt-4" size="small" bind:checked={scope.hideMergeable}
+								>Hide mergeables</Toggle
+							>
+						</li>
+					{/if}
 					<li>
 						<Toggle class="p-2 pt-4" size="small" bind:checked={scope.pipeline}
 							>Query pipeline status</Toggle

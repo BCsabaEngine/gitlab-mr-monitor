@@ -15,11 +15,13 @@ export const ReviewerScope = z.object({
 	name: z.string(),
 	enabled: z.boolean(),
 
-	draft: z.boolean().default(false),
-	pipeline: z.boolean().default(false),
-	alert: z.boolean().default(false),
 	groups: z.array(z.number()).default([]),
-	projects: z.array(z.number()).default([])
+	projects: z.array(z.number()).default([]),
+
+	draft: z.boolean().default(false),
+	hideMergeable: z.boolean().default(false),
+	pipeline: z.boolean().default(false),
+	alert: z.boolean().default(false)
 });
 export type ReviewerScope = z.infer<typeof ReviewerScope>;
 
@@ -28,13 +30,16 @@ export const ProjectScope = z.object({
 	name: z.string(),
 	enabled: z.boolean(),
 
-	draft: z.boolean().default(false),
-	pipeline: z.boolean().default(false),
-	alert: z.boolean().default(false),
-	days: z.number().default(7),
 	groups: z.array(z.number()).default([]),
 	projects: z.array(z.number()).default([]),
-	onlyUsers: z.array(z.number()).default([])
+
+	onlyUsers: z.array(z.number()).default([]),
+	days: z.number().default(7),
+
+	draft: z.boolean().default(false),
+	hideMergeable: z.boolean().default(false),
+	pipeline: z.boolean().default(false),
+	alert: z.boolean().default(false)
 });
 export type ProjectScope = z.infer<typeof ProjectScope>;
 

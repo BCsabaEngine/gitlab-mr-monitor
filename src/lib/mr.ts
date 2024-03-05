@@ -1,4 +1,5 @@
 import {
+	type ApprovalStateSchema,
 	type MergeRequestSchemaWithBasicLabels,
 	type PipelineSchema,
 	type ProjectSchema
@@ -15,6 +16,7 @@ dayjs.extend(relativeTime);
 
 export type LazyProjectSchema = Promise<ProjectSchema>;
 export type LazyPipelineSchema = Promise<PipelineSchema[]>;
+export type LazyApprovalStateSchema = Promise<ApprovalStateSchema>;
 
 export type MergeRequest = MergeRequestSchemaWithBasicLabels & {
 	project: LazyProjectSchema;
@@ -103,7 +105,18 @@ export const postProcess = async (
 
 	for (const mrg of mrs)
 		for (const mr of mrg) {
+			if (mr.draft && !scope.draft) continue;
+			if (result.some((m) => m.id === mr.id)) continue;
+
 			if (ignoredUsers.includes(mr.author.id)) continue;
+
+			if (
+				'hideMergeable' in scope &&
+				scope.hideMergeable &&
+				mr.detailed_merge_status === 'mergeable'
+			)
+				continue;
+
 			if (mr.assignee && ignoredUsers.includes(mr.assignee.id)) continue;
 			if (mr.assignees)
 				for (const assignee of mr.assignees) if (ignoredUsers.includes(assignee.id)) continue;
@@ -117,8 +130,6 @@ export const postProcess = async (
 				if (!match) continue;
 			}
 
-			if (mr.draft && !scope.draft) continue;
-			if (result.some((m) => m.id === mr.id)) continue;
 			result.push({
 				...mr,
 				title: mr.title.replace(/^draft:/i, '').trim(),

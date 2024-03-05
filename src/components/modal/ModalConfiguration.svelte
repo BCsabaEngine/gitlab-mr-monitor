@@ -53,13 +53,16 @@
 		if (name.confirmed && name.name) {
 			configuration.scopes.push({
 				mode: 'project',
+				name: name.name,
+				enabled: true,
+
 				projects: [],
 				groups: [],
 				onlyUsers: [],
-				name: name.name,
-				enabled: true,
 				days: 7,
+
 				draft: false,
+				hideMergeable: false,
 				alert: true,
 				pipeline: false
 			});
