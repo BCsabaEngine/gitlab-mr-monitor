@@ -19,7 +19,9 @@
 	let mrPromises: Promise<MergeRequestSchemaWithBasicLabels[][]>;
 	let mrs: MergeRequest[] = [];
 	let previousMrsIds: number[] = [];
+	let lastSessionId: number;
 	export const refresh = async (sessionId: number, background: boolean) => {
+		lastSessionId = sessionId;
 		const currentuser = await glCurrentUser;
 		mrPromises = background
 			? Promise.resolve(await generateMrPromisesFromScope(scope, currentuser))
@@ -48,6 +50,7 @@
 
 		mrs.splice(index, 1);
 		mrs = mrs;
+		dispatch('count', { sessionId: lastSessionId, count: mrs.length });
 	};
 </script>
 
