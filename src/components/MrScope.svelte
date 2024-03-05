@@ -8,6 +8,7 @@
 	import { addHiddenId } from '$stores/hiddenIds';
 	import type { Scope } from '$types/Scope';
 
+	import { isBackground } from './base/IsBackground.svelte';
 	import Mr from './Mr.svelte';
 	const dispatch = createEventDispatcher<{
 		count: { sessionId: number; count: number };
@@ -19,9 +20,11 @@
 	let mrPromises: Promise<MergeRequestSchemaWithBasicLabels[][]>;
 	let mrs: MergeRequest[] = [];
 	let previousMrsIds: number[] = [];
+	let arrivalMrsIds: number[] = [];
 	let lastSessionId: number;
 	export const refresh = async (sessionId: number, background: boolean) => {
 		lastSessionId = sessionId;
+
 		const currentuser = await glCurrentUser;
 		mrPromises = background
 			? Promise.resolve(await generateMrPromisesFromScope(scope, currentuser))
@@ -31,8 +34,11 @@
 			dispatch('count', { sessionId, count: mrs.length });
 
 			const mrsIds = mrs.map((m) => m.id);
-			if ('alert' in scope && scope.alert && mrsIds.some((mid) => !previousMrsIds.includes(mid)))
-				dispatch('alert', { sessionId });
+			const recentIds = mrsIds.filter((mid) => !previousMrsIds.includes(mid));
+			if (recentIds.length > 0 && 'alert' in scope && scope.alert) dispatch('alert', { sessionId });
+			if ($isBackground) arrivalMrsIds.push(...recentIds);
+			else arrivalMrsIds = [];
+
 			previousMrsIds = mrsIds;
 
 			mrs = await sortByProjectAndTitle(mrs);
@@ -52,6 +58,14 @@
 		mrs = mrs;
 		dispatch('count', { sessionId: lastSessionId, count: mrs.length });
 	};
+	const onConfirmNew = (mdId: number) => {
+		let index = arrivalMrsIds.indexOf(mdId);
+		while (index >= 0) {
+			arrivalMrsIds.splice(index, 1);
+			index = arrivalMrsIds.indexOf(mdId);
+		}
+		arrivalMrsIds = arrivalMrsIds;
+	};
 </script>
 
 {#await mrPromises then}
@@ -64,7 +78,12 @@
 			</span>
 			<div class="mt-2 grid md:grid-cols-2 lg:grid-cols-3 gap-4">
 				{#each mrs as mr (mr.id)}
-					<Mr {mr} on:close={(id) => onRemove(id.detail)} />
+					<Mr
+						{mr}
+						markedNew={arrivalMrsIds.includes(mr.id)}
+						on:confirmNew={(id) => onConfirmNew(id.detail)}
+						on:close={(id) => onRemove(id.detail)}
+					/>
 				{/each}
 			</div>
 		</div>

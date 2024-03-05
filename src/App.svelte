@@ -34,6 +34,7 @@
 	import { openConfiguration } from './common/openConfiguration';
 	import AppError from './components/appStatusCards/AppError.svelte';
 	import AppLoading from './components/appStatusCards/AppLoading.svelte';
+	import IsBackground, { isBackground } from './components/base/IsBackground.svelte';
 	import MrList from './components/MrList.svelte';
 
 	/*global __PKG_VERSION__*/
@@ -43,7 +44,6 @@
 
 	let appMrList: MrList;
 	let countMr: number = 0;
-	let isBackground = false;
 	let changedIndicator = false;
 
 	let refreshButtonDisabled: boolean = false;
@@ -61,7 +61,7 @@
 		}
 	};
 
-	const setChanged = (state: boolean) => (changedIndicator = isBackground && state);
+	const setChanged = (state: boolean) => (changedIndicator = $isBackground && state);
 
 	onMount(() => {
 		return refreshTimer.subscribe(() => refreshMrList(true));
@@ -72,18 +72,13 @@
 	use:shortcut={{
 		trigger: [{ key: 'r', modifier: [], callback: () => refreshMrList(true), preventDefault: true }]
 	}}
-	on:focus={() => {
-		isBackground = false;
-		setChanged(false);
-	}}
-	on:blur={() => (isBackground = true)}
 />
-
 <svelte:head>
 	<title
 		>{countMr > 0 ? `(${countMr}${changedIndicator ? '!' : ''}) - ` : ''}Gitlab MR monitor</title
 	>
 </svelte:head>
+<IsBackground on:focus={() => setChanged(false)} />
 
 <div class="bg-gray-200 dark:bg-gray-400 min-h-screen">
 	<Navbar let:NavContainer color="none">

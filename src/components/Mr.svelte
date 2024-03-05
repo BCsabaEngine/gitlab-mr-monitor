@@ -14,13 +14,20 @@
 
 	const dispatch = createEventDispatcher<{
 		close: number;
+		confirmNew: number;
 	}>();
-
 	export let mr: MergeRequest;
+	export let markedNew: boolean;
 </script>
 
-<Card class="max-w-full min-h-32 max-h-52 flex flex-col sm:p-0 sm:px-6 sm:pb-6">
-	<Toolbar class="px-0 pb-0">
+<Card
+	color={markedNew ? 'green' : 'form'}
+	class="max-w-full min-h-32 max-h-52 flex flex-col sm:p-0 sm:px-6 sm:pb-6"
+	on:click={() => {
+		dispatch('confirmNew', mr.id);
+	}}
+>
+	<Toolbar color={markedNew ? 'green' : 'form'} class="px-0 pb-0">
 		<ToolbarGroup>
 			<CloseButton
 				size="sm"
