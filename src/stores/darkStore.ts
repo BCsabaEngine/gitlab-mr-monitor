@@ -1,10 +1,9 @@
 import { readable } from 'svelte/store';
 
-export const darkStore = (intervalSec: number) =>
-	readable(false, (set) => {
-		const timerObject = setInterval(
-			() => set(window.matchMedia('(prefers-color-scheme: dark)').matches),
-			intervalSec * 1000
-		);
+const getDarkMode = (): boolean => window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+export const createDarkStore = (intervalSec: number) =>
+	readable(getDarkMode(), (set) => {
+		const timerObject = setInterval(() => set(getDarkMode()), intervalSec * 1000);
 		return () => clearInterval(timerObject);
 	});
