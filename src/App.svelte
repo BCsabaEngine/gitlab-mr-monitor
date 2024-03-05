@@ -13,7 +13,6 @@
 		DropdownItem,
 		Kbd,
 		Navbar,
-		NavHamburger,
 		NavUl,
 		Radio
 	} from 'flowbite-svelte';
@@ -81,8 +80,8 @@
 
 <div class="bg-gray-200 dark:bg-gray-400 min-h-screen">
 	<Navbar let:NavContainer color="none">
-		<NavContainer class="border px-5 py-2 lg bg-white dark:bg-gray-600">
-			<div class="flex items-left md:order-2">
+		<NavContainer class="border px-5 py-2 bg-white dark:bg-gray-600">
+			<div class="flex items-left">
 				<img
 					src="{BASE_URL}/favicon.png"
 					class="me-3 h-6 sm:h-9"
@@ -103,7 +102,7 @@
 					</Badge>
 				{/if}
 			</div>
-			<div class="flex items-center md:order-3">
+			<div class="flex items-center">
 				<NavUl>
 					{#if !$loginMissing}
 						<Button size="md" disabled={refreshButtonDisabled} on:click={() => refreshMrList(true)}>
@@ -153,8 +152,6 @@
 						</Dropdown>
 					{/await}
 				{/if}
-
-				<NavHamburger class1="w-full md:flex md:w-auto md:order-1" />
 			</div>
 		</NavContainer>
 	</Navbar>
