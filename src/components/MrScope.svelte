@@ -4,8 +4,8 @@
 	import { createEventDispatcher, onMount } from 'svelte';
 
 	import { generateMrPromisesFromScope, glCurrentUser } from '$lib/gitlab';
-	import { hideMr } from '$lib/hiddenMr';
 	import { type MergeRequest, postProcess, sortByProjectAndTitle } from '$lib/mr';
+	import { addHiddenId } from '$stores/hiddenIds';
 	import type { Scope } from '$types/Scope';
 
 	import Mr from './Mr.svelte';
@@ -43,7 +43,7 @@
 		refresh(0, false);
 	});
 	const onRemove = (mrId: number) => {
-		hideMr(mrId);
+		addHiddenId(mrId);
 
 		const index = mrs.findIndex((mr) => mr.id === mrId);
 		if (index < 0) return;

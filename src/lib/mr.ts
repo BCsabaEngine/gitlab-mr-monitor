@@ -8,10 +8,10 @@ import dayjs from 'dayjs/esm';
 import relativeTime from 'dayjs/esm/plugin/relativeTime';
 
 import { getConfigurationStoreValue } from '$stores/configurationStore';
+import { getHiddenIdsStoreValue, isHiddenId } from '$stores/hiddenIds';
 import type { Scope } from '$types/Scope';
 
 import { getGlLastPipeline, getGlProject } from './gitlab';
-import { isMrHidden } from './hiddenMr';
 
 dayjs.extend(relativeTime);
 
@@ -102,11 +102,12 @@ export const postProcess = async (
 	mrs: MergeRequestSchemaWithBasicLabels[][]
 ): Promise<MergeRequest[]> => {
 	const ignoredUsers = getConfigurationStoreValue().ignoredUsers;
+	const hiddenIds = getHiddenIdsStoreValue();
 	const result: MergeRequest[] = [];
 
 	for (const mrg of mrs)
 		for (const mr of mrg) {
-			if (isMrHidden(mr.id)) continue;
+			if (isHiddenId(hiddenIds, mr.id)) continue;
 			if (mr.draft && !scope.draft) continue;
 			if (result.some((m) => m.id === mr.id)) continue;
 

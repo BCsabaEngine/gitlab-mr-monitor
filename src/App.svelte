@@ -25,6 +25,7 @@
 	import { autoRefreshList } from '$lib/autoRefresh';
 	import { glCurrentUser } from '$lib/gitlab';
 	import { configurationStore } from '$stores/configurationStore';
+	import { hiddenIdsLength, resetHiddenIdsStoreValue } from '$stores/hiddenIds';
 	import { loginMissing, resetLoginStoreValue } from '$stores/loginStore';
 	import { modalStore } from '$stores/modalStore';
 	import { refreshTimer } from '$stores/timerStore';
@@ -102,7 +103,9 @@
 				</span>
 				{#if countMr > 0 && !$loginMissing}
 					<Badge large border class="ml-4" color="dark">
-						<span class="text-lg">{countMr}</span>
+						<span class="text-lg">
+							{countMr}
+						</span>
 					</Badge>
 				{/if}
 			</div>
@@ -132,6 +135,14 @@
 								<span class="block text-sm">{glCurrentUser.name}</span>
 								<span class="block truncate text-sm font-medium">{glCurrentUser.username}</span>
 							</DropdownHeader>
+							{#if $hiddenIdsLength}
+								<DropdownItem
+									on:click={() => {
+										resetHiddenIdsStoreValue();
+										refreshMrList(true);
+									}}>Restore {$hiddenIdsLength} hiddens</DropdownItem
+								>
+							{/if}
 							<DropdownItem>Auto refresh...</DropdownItem>
 							<Dropdown placement="left-start" class="w-44 p-3 space-y-3 text-sm">
 								{#each autoRefreshList as autoRefresh}

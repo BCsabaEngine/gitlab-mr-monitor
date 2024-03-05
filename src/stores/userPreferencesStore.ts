@@ -17,6 +17,5 @@ export const userPreferencesStore = persisted<UserPreferences>(
 );
 
 export const getLoginStoreValue = (): UserPreferences => get(userPreferencesStore);
-export const setLoginStoreValue = (login: UserPreferences) => userPreferencesStore.set(login);
 export const updateLoginStoreValue = (updater: Updater<UserPreferences>) =>
 	userPreferencesStore.update(updater);

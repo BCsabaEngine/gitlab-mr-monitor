@@ -21,6 +21,7 @@ module.exports = {
 		'simple-import-sort/exports': 'error',
 		'unicorn/filename-case': 'off',
 		'unicorn/switch-case-braces': 'off',
+		'unicorn/no-array-reduce': 'off',
 		'no-alert': 'error',
 		'no-console': 'error',
 		'no-debugger': 'error',

@@ -14,9 +14,9 @@ export const loginStore = persisted<Login>('login', emptyLogin, {
 });
 
 export const getLoginStoreValue = (): Login => get(loginStore);
-export const resetLoginStoreValue = () => setLoginStoreValue(emptyLogin);
 export const setLoginStoreValue = (login: Login) => loginStore.set(login);
 export const updateLoginStoreValue = (updater: Updater<Login>) => loginStore.update(updater);
+export const resetLoginStoreValue = () => updateLoginStoreValue(() => emptyLogin);
 
 export const loginMissing = derived(loginStore, ($login) => !$login.host || !$login.token);
 export const loginHash = derived(loginStore, ($login) => $login.host + $login.token);
