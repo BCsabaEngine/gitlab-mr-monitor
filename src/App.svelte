@@ -85,7 +85,7 @@
 			<div class="flex items-left">
 				<img
 					src="{BASE_URL}/favicon.png"
-					class="me-3 h-6 sm:h-9"
+					class="me-3 h-9"
 					alt="Gitlab MR monitor"
 					title={PKG_VERSION}
 				/>
@@ -103,19 +103,26 @@
 					</Badge>
 				{/if}
 			</div>
-			<div class="flex items-center">
-				<NavUl>
-					{#if !$loginMissing}
-						<Button size="md" disabled={refreshButtonDisabled} on:click={() => refreshMrList(true)}>
-							<RefreshOutline class="mr-1" />
+			<div class="flex items-center gap-2">
+				{#if !$loginMissing}
+					<Button
+						size="md"
+						class="px-3 sm:px-6"
+						disabled={refreshButtonDisabled}
+						on:click={() => refreshMrList(true)}
+					>
+						<RefreshOutline class="mr-0 sm:mr-1" />
+						<div class="hidden sm:flex">
 							Refresh
 							<Kbd class="ml-2 px-2">R</Kbd>
-						</Button>
+						</div>
+					</Button>
+					<NavUl>
 						<Button color="none" size="xs" on:click={() => openConfiguration()}>
 							<CogOutline />
 						</Button>
-					{/if}
-				</NavUl>
+					</NavUl>
+				{/if}
 
 				{#if !$loginMissing}
 					{#await glCurrentUser}
