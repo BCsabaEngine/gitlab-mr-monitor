@@ -22,6 +22,7 @@
 	import AppError from '$components/appStatusCards/AppError.svelte';
 	import AppLoading from '$components/appStatusCards/AppLoading.svelte';
 	import AppConfigMissing from '$components/appStatusCards/AppLoginMissing.svelte';
+	import Alert from '$components/base/Alert.svelte';
 	import IsBackground, { isBackground } from '$components/base/IsBackground.svelte';
 	import MrList from '$components/MrList.svelte';
 	import { autoRefreshList } from '$lib/autoRefresh';
@@ -35,12 +36,15 @@
 	import { userPreferencesStore } from '$stores/userPreferencesStore';
 
 	import { openConfiguration } from './common/openConfiguration';
+	import { alertContext } from './contexts/alertContext';
 
 	/*global __PKG_VERSION__*/
 	const PKG_VERSION = __PKG_VERSION__;
 	/*global __BASE_URL__*/
 	const BASE_URL = __BASE_URL__;
 
+	let alert: Alert;
+	alertContext.set(() => alert);
 	let appMrList: MrList;
 	let countMr: number = 0;
 	let changedIndicator = false;
@@ -212,5 +216,7 @@
 		{/if}
 	{/key}
 </div>
+
+<Alert bind:this={alert} />
 
 <ModalPortal store={modalStore} />

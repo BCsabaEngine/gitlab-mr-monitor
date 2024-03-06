@@ -83,6 +83,7 @@
 						markedNew={arrivalMrsIds.includes(mr.id)}
 						on:confirmNew={(id) => onConfirmNew(id.detail)}
 						on:close={(id) => onRemove(id.detail)}
+						on:refresh={() => refresh(lastSessionId, true)}
 					/>
 				{/each}
 			</div>

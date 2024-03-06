@@ -41,6 +41,9 @@ export const getGlApprovalState = (projectId: number, mrIid: number) =>
 		showExpanded: false
 	});
 
+export const glUpdateReviewers = (projectId: number, mrIid: number, reviewerIds: number[]) =>
+	getConfiguredGitlabClient().MergeRequests.edit(projectId, mrIid, { reviewerIds });
+
 /* Once initialized promises */
 const getGlProjects = () =>
 	getConfiguredGitlabClient().Projects.all({

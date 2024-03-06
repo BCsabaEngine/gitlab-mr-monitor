@@ -1,10 +1,20 @@
 <script lang="ts">
-	import { Avatar, Badge, Card, CloseButton, Tooltip } from 'flowbite-svelte';
+	import {
+		Avatar,
+		Badge,
+		Button,
+		Card,
+		CloseButton,
+		Dropdown,
+		DropdownItem,
+		Tooltip
+	} from 'flowbite-svelte';
 	import { Toolbar, ToolbarGroup } from 'flowbite-svelte';
 	import {
 		ArrowRightSolid,
 		ClockOutline,
 		CodeBranchSolid,
+		DotsVerticalOutline,
 		InfoCircleOutline,
 		PlayOutline
 	} from 'flowbite-svelte-icons';
@@ -12,12 +22,30 @@
 
 	import { type MergeRequest, pipelineStatusToHuman } from '$lib/mr';
 
+	import { alertContext } from '../contexts/alertContext';
+	import Alert from './base/Alert.svelte';
+
 	const dispatch = createEventDispatcher<{
 		close: number;
 		confirmNew: number;
+		refresh: void;
 	}>();
+	const getAlert = alertContext.get();
 	export let mr: MergeRequest;
 	export let markedNew: boolean;
+
+	const addReviewer = (userId: number) => {
+		userId;
+		const alert: Alert = getAlert();
+		alert.showError('Failed', 'Some error', 2000);
+	};
+	/*
+	glUpdateReviewers(mr.project_id, mr.iid, [userId])
+			.then(() => {
+				dispatch('refresh');
+			})
+			.catch((error) => console.log(error));
+*/
 </script>
 
 <Card
@@ -68,6 +96,15 @@
 				<Avatar id="avatar-currentuser" size="sm" src={reviewer.avatar_url} />
 				<Tooltip type="light" arrow={false} color="green">{reviewer.name} as reviewer</Tooltip>
 			{/each}
+			<Button size="sm" color="none" class="p-0"><DotsVerticalOutline /></Button>
+			<Dropdown class="w-48 overflow-y-auto py-1 max-h-48">
+				<div slot="header" class="px-4 py-2">
+					<span class="block text-xs text-gray-900 dark:text-white">Add reviewer</span>
+				</div>
+				<DropdownItem on:click={() => addReviewer(167)}>Balázs Csaba</DropdownItem>
+				<DropdownItem>Settings</DropdownItem>
+				<DropdownItem>Earnings</DropdownItem>
+			</Dropdown>
 		</ToolbarGroup>
 	</Toolbar>
 	<h5 class="mt-2 mb-2 text-md font-bold tracking-tigh text-gray-900 dark:text-white">
