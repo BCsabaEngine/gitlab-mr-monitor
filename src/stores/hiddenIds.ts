@@ -6,9 +6,21 @@ type HiddenIds = Record<string, number[]>;
 
 const emptyHiddenIds: HiddenIds = {};
 
+export const hiddenIdsJsonSerializer = {
+	parse: (text: string) => {
+		try {
+			return JSON.parse(text);
+		} catch {
+			return emptyHiddenIds;
+		}
+	},
+	stringify: (object: HiddenIds) => JSON.stringify(object)
+};
+
 export const hiddenIdsStore = persisted<HiddenIds>('hiddenids', emptyHiddenIds, {
 	syncTabs: true,
-	storage: 'local'
+	storage: 'local',
+	serializer: hiddenIdsJsonSerializer
 });
 
 export const getHiddenIdsStoreValue = (): HiddenIds => get(hiddenIdsStore);

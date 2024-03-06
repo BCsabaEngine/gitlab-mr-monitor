@@ -25,13 +25,12 @@
 	import IsBackground, { isBackground } from '$components/base/IsBackground.svelte';
 	import MrList from '$components/MrList.svelte';
 	import { autoRefreshList } from '$lib/autoRefresh';
-	import { toggleDark } from '$lib/darkMode';
 	import { glCurrentUser } from '$lib/gitlab';
 	import { configurationStore } from '$stores/configurationStore';
 	import { hiddenIdsLength, resetHiddenIdsStoreValue } from '$stores/hiddenIds';
 	import { loginMissing, resetLoginStoreValue } from '$stores/loginStore';
 	import { modalStore } from '$stores/modalStore';
-	import { refreshTimer } from '$stores/timerStore';
+	import { refreshTimer } from '$stores/refreshTimerStore';
 	import { userPreferencesStore } from '$stores/userPreferencesStore';
 
 	import { openConfiguration } from './common/openConfiguration';
@@ -146,7 +145,30 @@
 									</li>
 								{/each}
 							</Dropdown>
-							<DropdownItem on:click={() => toggleDark()}>Dark mode</DropdownItem>
+							<DropdownItem>Dark mode...</DropdownItem>
+							<Dropdown placement="left-start" class="w-44 p-3 space-y-3 text-sm">
+								<li>
+									<Radio
+										name="groupDarkMode"
+										value={'system'}
+										bind:group={$userPreferencesStore.darkMode}>System</Radio
+									>
+								</li>
+								<li>
+									<Radio
+										name="groupDarkMode"
+										value={'light'}
+										bind:group={$userPreferencesStore.darkMode}>Light</Radio
+									>
+								</li>
+								<li>
+									<Radio
+										name="groupDarkMode"
+										value={'dark'}
+										bind:group={$userPreferencesStore.darkMode}>Dark</Radio
+									>
+								</li>
+							</Dropdown>
 							<DropdownItem on:click={() => openConfiguration()}>Settings</DropdownItem>
 							<DropdownItem on:click={() => resetLoginStoreValue()}>Logout</DropdownItem>
 						</Dropdown>
