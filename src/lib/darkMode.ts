@@ -9,4 +9,5 @@ export const toggleDark = () => classes.toggle('dark');
 export const setDark = () => classes.add('dark');
 export const resetDark = () => classes.remove('dark');
 
-createDarkStore(WATCH_INTERVAL_SEC).subscribe((isDark) => (isDark ? setDark() : resetDark()));
+export const init = () =>
+	createDarkStore(WATCH_INTERVAL_SEC).subscribe((isDark) => (isDark ? setDark() : resetDark()));

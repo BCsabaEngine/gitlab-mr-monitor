@@ -25,6 +25,7 @@
 	import IsBackground, { isBackground } from '$components/base/IsBackground.svelte';
 	import MrList from '$components/MrList.svelte';
 	import { autoRefreshList } from '$lib/autoRefresh';
+	import { init as initDarkMode } from '$lib/darkMode';
 	import { glCurrentUser } from '$lib/gitlab';
 	import { configurationStore } from '$stores/configurationStore';
 	import { hiddenIdsLength, resetHiddenIdsStoreValue } from '$stores/hiddenIds';
@@ -61,6 +62,7 @@
 
 	const setChanged = (state: boolean) => (changedIndicator = $isBackground && state);
 	onMount(() => {
+		initDarkMode();
 		return refreshTimer.subscribe(() => refreshMrList(true));
 	});
 </script>
