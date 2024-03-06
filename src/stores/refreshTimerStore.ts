@@ -8,7 +8,8 @@ export const refreshTimer = derived(
 	userPreferencesStore,
 	($userPreferencesStore, set) => {
 		clearInterval(timerObject);
-		timerObject = setInterval(() => set(counter++), $userPreferencesStore.autoRefreshSec * 1000);
+		if ($userPreferencesStore.autoRefreshSec > 0)
+			timerObject = setInterval(() => set(counter++), $userPreferencesStore.autoRefreshSec * 1000);
 
 		return () => clearInterval(timerObject);
 	},

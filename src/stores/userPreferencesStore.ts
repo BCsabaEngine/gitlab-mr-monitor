@@ -1,10 +1,22 @@
 import { get, type Updater } from 'svelte/store';
 import { persisted } from 'svelte-persisted-store';
 
-import type { UserPreferences } from '$types/UserPreferences';
+import { UserPreferences } from '$types/UserPreferences';
 
 const emptyuserPreferences: UserPreferences = {
-	autoRefreshSec: 0
+	autoRefreshSec: 0,
+	darkMode: 'system'
+};
+
+export const userPreferencesJsonSerializer = {
+	parse: (text: string) => {
+		try {
+			return UserPreferences.parse(JSON.parse(text));
+		} catch {
+			return emptyuserPreferences;
+		}
+	},
+	stringify: (object: UserPreferences) => JSON.stringify(object)
 };
 
 export const userPreferencesStore = persisted<UserPreferences>(
@@ -12,10 +24,11 @@ export const userPreferencesStore = persisted<UserPreferences>(
 	emptyuserPreferences,
 	{
 		syncTabs: true,
-		storage: 'local'
+		storage: 'local',
+		serializer: userPreferencesJsonSerializer
 	}
 );
 
-export const getLoginStoreValue = (): UserPreferences => get(userPreferencesStore);
-export const updateLoginStoreValue = (updater: Updater<UserPreferences>) =>
+export const getUserPreferencesStoreValue = (): UserPreferences => get(userPreferencesStore);
+export const updateUserPreferencesStoreValue = (updater: Updater<UserPreferences>) =>
 	userPreferencesStore.update(updater);

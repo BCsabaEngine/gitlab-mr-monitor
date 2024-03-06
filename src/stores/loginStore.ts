@@ -1,16 +1,28 @@
 import { derived, get, type Updater } from 'svelte/store';
 import { persisted } from 'svelte-persisted-store';
 
-import type { Login } from '$types/Login';
+import { Login } from '$types/Login';
 
 const emptyLogin: Login = {
 	host: '',
 	token: ''
 };
 
+export const loginJsonSerializer = {
+	parse: (text: string) => {
+		try {
+			return Login.parse(JSON.parse(text));
+		} catch {
+			return emptyLogin;
+		}
+	},
+	stringify: (object: Login) => JSON.stringify(object)
+};
+
 export const loginStore = persisted<Login>('login', emptyLogin, {
 	syncTabs: true,
-	storage: 'local'
+	storage: 'local',
+	serializer: loginJsonSerializer
 });
 
 export const getLoginStoreValue = (): Login => get(loginStore);
