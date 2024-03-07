@@ -4,6 +4,7 @@
 	import { configurationStore } from '$stores/configurationStore';
 	import type { Scope } from '$types/Scope';
 
+	import { isBackgroundNow } from './base/IsBackground.svelte';
 	import MrScope from './MrScope.svelte';
 	const dispatch = createEventDispatcher<{
 		count: number;
@@ -61,7 +62,7 @@
 			dispatch('changed');
 
 			if (refreshSessionIdAlertPlayed !== alert.detail.sessionId) {
-				playNotification();
+				if (isBackgroundNow()) playNotification();
 				refreshSessionIdAlertPlayed !== alert.detail.sessionId;
 			}
 		}}
