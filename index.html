@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<link rel="icon" href="favicon.png" />
+		<link rel="manifest" href="manifest.webmanifest" />
+		<title>Gitlab MR monitor</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta name="theme-color" content="#f3f4f6" />
+		<meta name="pwa-capable" content="yes" />
+	</head>
+
+	<body>
+		<div id="app"></div>
+		<script type="module" src="/src/main.ts"></script>
+		<script>
+			if ('serviceWorker' in navigator)
+				navigator.serviceWorker.register('/gitlab-mr-monitor/service-worker.js', {
+					scope: '/gitlab-mr-monitor/'
+				});
+		</script>
+	</body>
+</html>
