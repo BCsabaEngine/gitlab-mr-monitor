@@ -104,7 +104,8 @@ export const generateMrPromisesFromScope = async (
 		case 'self-author':
 			return [
 				await getConfiguredGitlabClient().MergeRequests.all({
-					state: 'opened'
+					state: 'opened',
+					updatedAfter
 				})
 			];
 		case 'self-reviewer': {
@@ -114,7 +115,8 @@ export const generateMrPromisesFromScope = async (
 						getConfiguredGitlabClient().MergeRequests.all({
 							state: 'opened',
 							groupId: g,
-							reviewerId: user.id
+							reviewerId: user.id,
+							updatedAfter
 						})
 					)
 				);

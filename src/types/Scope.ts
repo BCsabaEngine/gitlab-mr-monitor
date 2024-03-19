@@ -5,6 +5,7 @@ export const AuthorScope = z.object({
 	name: z.string(),
 	enabled: z.boolean(),
 
+	days: z.number().default(30),
 	draft: z.boolean().default(false),
 	pipeline: z.boolean().default(false)
 });
@@ -18,6 +19,7 @@ export const ReviewerScope = z.object({
 	groups: z.array(z.number()).default([]),
 	projects: z.array(z.number()).default([]),
 
+	days: z.number().default(30),
 	draft: z.boolean().default(false),
 	hideMergeable: z.boolean().default(false),
 	pipeline: z.boolean().default(false),

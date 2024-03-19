@@ -2,7 +2,7 @@
 	import { Avatar, Badge, Card, CloseButton, Tooltip } from 'flowbite-svelte';
 	import { Toolbar, ToolbarGroup } from 'flowbite-svelte';
 	import {
-		ArrowRightSolid,
+		ArrowRightOutline,
 		ClockOutline,
 		CodeBranchSolid,
 		InfoCircleOutline,
@@ -100,11 +100,11 @@
 		<CodeBranchSolid size="sm" class="mt-0.5" />
 		{mr.source_branch}
 		{#await mr.project}
-			<ArrowRightSolid />
+			<ArrowRightOutline />
 			{mr.target_branch}
 		{:then project}
 			{#if mr.target_branch !== project.default_branch}
-				<ArrowRightSolid />
+				<ArrowRightOutline />
 				{mr.target_branch}
 			{/if}
 		{/await}

@@ -9,7 +9,8 @@ const defaultSelfAuthor: Scope = {
 	name: 'Me as author',
 	enabled: true,
 	draft: false,
-	pipeline: true
+	pipeline: true,
+	days: 30
 };
 const defaultSelfReviewer: Scope = {
 	mode: 'self-reviewer',
@@ -19,6 +20,7 @@ const defaultSelfReviewer: Scope = {
 	projects: [],
 	groups: [],
 
+	days: 30,
 	draft: false,
 	hideMergeable: false,
 	alert: true,

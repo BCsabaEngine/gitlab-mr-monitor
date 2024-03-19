@@ -1,6 +1,6 @@
 {
 	"name": "gitlab-mr-monitor",
-	"version": "1.2.11",
+	"version": "1.2.12",
 	"type": "module",
 	"main": "build/index.js",
 	"engines": {
@@ -23,8 +23,8 @@
 		"@rollup/plugin-swc": "^0.3.0",
 		"@sveltejs/vite-plugin-svelte": "^3.0.2",
 		"@tsconfig/svelte": "^5.0.2",
-		"@typescript-eslint/eslint-plugin": "^7.2.0",
-		"@typescript-eslint/parser": "^7.2.0",
+		"@typescript-eslint/eslint-plugin": "^7.3.1",
+		"@typescript-eslint/parser": "^7.3.1",
 		"autoprefixer": "^10.4.18",
 		"eslint": "^8.57.0",
 		"eslint-config-prettier": "^9.1.0",
@@ -35,9 +35,9 @@
 		"eslint-plugin-unicorn": "^51.0.1",
 		"flowbite": "^2.3.0",
 		"flowbite-svelte": "^0.44.24",
-		"flowbite-svelte-icons": "^1.4.3",
+		"flowbite-svelte-icons": "^1.4.5",
 		"patch-package": "^8.0.0",
-		"postcss": "^8.4.35",
+		"postcss": "^8.4.36",
 		"postcss-load-config": "^5.0.3",
 		"prettier": "^3.2.5",
 		"prettier-plugin-svelte": "^3.2.2",
@@ -51,7 +51,7 @@
 		"vite-plugin-tailwind-purgecss": "^0.2.0"
 	},
 	"dependencies": {
-		"@gitbeaker/rest": "^39.34.3",
+		"@gitbeaker/rest": "^40.0.1",
 		"@svelte-put/modal": "^1.0.7",
 		"@svelte-put/shortcut": "^3.1.0",
 		"dayjs": "^1.11.10",

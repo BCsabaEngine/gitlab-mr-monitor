@@ -10,7 +10,7 @@
 <script lang="ts">
 	import { Badge, Button, Dropdown, DropdownItem, Search, Tooltip } from 'flowbite-svelte';
 	import {
-		ChevronDownSolid,
+		ChevronDownOutline,
 		ClipboardOutline,
 		CloseOutline,
 		FileCopyOutline
@@ -78,7 +78,7 @@
 
 <div class="flex flex-col gap-2 {aClass}">
 	<div class="bt-4 flex flex-row gap-2">
-		<Button size="xs">Add<ChevronDownSolid class="ml-2 text-white dark:text-white" /></Button>
+		<Button size="xs">Add<ChevronDownOutline class="ml-2 text-white dark:text-white" /></Button>
 		<Dropdown class="overflow-y-auto px-3 pb-3 text-sm h-44 w-96">
 			<div slot="header" class="p-3">
 				<Search size="md" bind:value={searchValue} />
