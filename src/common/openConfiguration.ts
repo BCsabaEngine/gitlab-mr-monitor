@@ -15,8 +15,5 @@ export const openLogin = async () => {
 export const openConfiguration = async () => {
 	const config = structuredClone(getConfigurationStoreValue());
 	const { confirmed, configuration } = await showModalConfiguration(config);
-	if (confirmed) {
-		setConfigurationStoreValue(configuration);
-		reloadInitialGitlabData();
-	}
+	if (confirmed) setConfigurationStoreValue(configuration);
 };
