@@ -8,7 +8,6 @@
 		"npm": ">=10.0.0"
 	},
 	"scripts": {
-		"postinstall": "patch-package",
 		"dev": "vite dev --host",
 		"build": "vite build",
 		"preview": "vite preview",
@@ -36,7 +35,6 @@
 		"flowbite": "^2.3.0",
 		"flowbite-svelte": "^0.44.24",
 		"flowbite-svelte-icons": "^1.4.5",
-		"patch-package": "^8.0.0",
 		"postcss": "^8.4.37",
 		"postcss-load-config": "^5.0.3",
 		"prettier": "^3.2.5",
@@ -55,7 +53,6 @@
 		"@svelte-put/modal": "^1.0.7",
 		"@svelte-put/shortcut": "^3.1.0",
 		"dayjs": "^1.11.10",
-		"svelte-loading-spinners": "^0.3.4",
 		"svelte-persisted-store": "^0.9.1",
 		"zod": "^3.22.4"
 	}
