@@ -13,6 +13,7 @@
 
 	import NumberInputBound from '$components/base/input/NumberInputBound.svelte';
 	import MultiSelect, { type MultiSelectItem } from '$components/base/MultiSelect.svelte';
+	import Tag from '$components/base/Tag.svelte';
 	import { glGroups, glProjects, glUsers } from '$lib/gitlab';
 	import { showModalNameEdit } from '$stores/modalStore';
 	import type { Scope } from '$types/Scope';
@@ -142,7 +143,8 @@
 		{/if}
 	</div>
 	{#if scope.enabled}
-		{@const multiselects = 'groups' in scope || 'projects' in scope || 'onlyUsers' in scope}
+		{@const multiselects =
+			'groups' in scope || 'projects' in scope || 'onlyUsers' in scope || 'bannedWords' in scope}
 		{#if multiselects}
 			<Accordion flush>
 				{#if 'groups' in scope && 'projects' in scope}
@@ -186,6 +188,7 @@
 						/>
 					</AccordionItem>
 				{/if}
+
 				{#if 'onlyUsers' in scope}
 					<AccordionItem>
 						<span slot="header" class="text-sm">
@@ -198,6 +201,25 @@
 							a common repo with a small team.</Helper
 						>
 						<MultiSelect class="mt-2" items={userMapping} bind:values={scope.onlyUsers} />
+					</AccordionItem>
+				{/if}
+
+				{#if 'bannedWords' in scope}
+					<AccordionItem>
+						<span slot="header" class="text-sm">
+							{scope.bannedWords.length > 0
+								? `${scope.bannedWords.length} banned words`
+								: 'No banned word'}
+						</span>
+						<Helper class="text-xs text-gray-600"
+							>You can select multiple words or word fragments and filter out MRs that contain those
+							words.</Helper
+						>
+						<Tag
+							class="mt-2"
+							bind:values={scope.bannedWords}
+							tagConverter={(tag) => (tag || '').trim().toLocaleLowerCase()}
+						/>
 					</AccordionItem>
 				{/if}
 			</Accordion>
