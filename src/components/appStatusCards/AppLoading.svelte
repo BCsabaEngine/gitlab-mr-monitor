@@ -1,7 +1,6 @@
 <script lang="ts">
+	import { Spinner } from 'flowbite-svelte';
 	import { onMount } from 'svelte';
-
-	import Loader from '$components/base/Loader.svelte';
 
 	export let title: string;
 	export let message: string;
@@ -27,7 +26,7 @@
 			<p class="font-normal text-gray-700 dark:text-gray-400 leading-tight">
 				{message}
 			</p>
-			<Loader />
+			<Spinner class="mt-4" />
 		</center>
 	</div>
 {/if}

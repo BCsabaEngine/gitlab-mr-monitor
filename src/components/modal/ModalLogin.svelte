@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { Button, Helper, Input, Label, Modal } from 'flowbite-svelte';
-	import { CheckOutline } from 'flowbite-svelte-icons';
+	import { Button, ButtonGroup, Helper, Input, InputAddon, Label, Modal } from 'flowbite-svelte';
+	import { CheckOutline, EyeOutline, EyeSlashOutline } from 'flowbite-svelte-icons';
 	import { createEventDispatcher } from 'svelte';
 
 	import BadgeAutohide from '$components/base/BadgeAutohide.svelte';
@@ -52,7 +52,7 @@
 	};
 	let checkButtonEnabled: boolean = false;
 	$: checkButtonEnabled = Login.safeParse(login).success;
-
+	let showToken = false;
 	export let login: Login;
 </script>
 
@@ -69,8 +69,25 @@
 			>
 		</div>
 		<div>
-			<Label for="host" class="mb-2">Token</Label>
-			<Input id="host" bind:value={login.token} placeholder="glpat-xxxxxxxxxxxxxxxxxxxx" />
+			<Label for="token" class="mb-2">Token</Label>
+
+			<ButtonGroup class="w-full">
+				<InputAddon>
+					<button on:click={() => (showToken = !showToken)}>
+						{#if showToken}
+							<EyeOutline class="w-6 h-6" />
+						{:else}
+							<EyeSlashOutline class="w-6 h-6" />
+						{/if}
+					</button>
+				</InputAddon>
+				<Input
+					id="token"
+					bind:value={login.token}
+					type={showToken ? 'text' : 'password'}
+					placeholder="glpat-xxxxxxxxxxxxxxxxxxxx"
+				/>
+			</ButtonGroup>
 			<Helper class="text-xs text-gray-600 mt-1 ml-2"
 				>Enter your private access token, which can be the same one you write in npmrc/yarnrc</Helper
 			>

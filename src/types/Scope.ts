@@ -36,6 +36,7 @@ export const ProjectScope = z.object({
 	projects: z.array(z.number()).default([]),
 
 	onlyUsers: z.array(z.number()).default([]),
+	bannedWords: z.array(z.string()).default([]),
 	days: z.number().default(7),
 
 	draft: z.boolean().default(false),

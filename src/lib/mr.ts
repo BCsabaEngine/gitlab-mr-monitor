@@ -120,6 +120,17 @@ export const postProcess = async (
 			)
 				continue;
 
+			if ('bannedWords' in scope && scope.bannedWords.length > 0) {
+				let contains = false;
+				for (const tag of scope.bannedWords) {
+					if (mr.title.toLocaleLowerCase().includes(tag.toLocaleLowerCase())) contains = true;
+					if (mr.description.toLocaleLowerCase().includes(tag.toLocaleLowerCase())) contains = true;
+					if (mr.source_branch.toLocaleLowerCase().includes(tag.toLocaleLowerCase()))
+						contains = true;
+				}
+				if (contains) continue;
+			}
+
 			if (mr.assignee && ignoredUsers.includes(mr.assignee.id)) continue;
 			if (mr.assignees)
 				for (const assignee of mr.assignees) if (ignoredUsers.includes(assignee.id)) continue;

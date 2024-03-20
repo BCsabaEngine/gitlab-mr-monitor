@@ -59,6 +59,7 @@
 				projects: [],
 				groups: [],
 				onlyUsers: [],
+				bannedWords: [],
 				days: 7,
 
 				draft: false,
