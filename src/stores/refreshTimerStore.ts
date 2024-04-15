@@ -3,7 +3,7 @@ import { derived } from 'svelte/store';
 import { userPreferencesStore } from './userPreferencesStore';
 
 let counter = 0;
-let timerObject: NodeJS.Timeout;
+let timerObject: number;
 export const refreshTimer = derived(
 	userPreferencesStore,
 	($userPreferencesStore, set) => {

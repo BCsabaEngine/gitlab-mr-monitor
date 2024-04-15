@@ -16,7 +16,7 @@ const isDarkByMode = (mode: UserPreferenceDarkMode): boolean | undefined => {
 	}
 };
 
-let timerObject: NodeJS.Timeout;
+let timerObject: number;
 export const createDarkStore = (intervalSec: number) =>
 	derived(
 		userPreferencesStore,
