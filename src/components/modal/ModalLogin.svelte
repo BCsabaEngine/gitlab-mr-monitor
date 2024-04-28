@@ -56,7 +56,7 @@
 	export let login: Login;
 </script>
 
-<Modal open={true} size="sm" dismissable={false} bodyClass="space-y-0">
+<Modal open={true} size="sm" dismissable={false}>
 	<AutoFocus />
 	<h3 class="mb-10 text-lg font-normal text-gray-500 dark:text-gray-400">Login to Gitlab server</h3>
 

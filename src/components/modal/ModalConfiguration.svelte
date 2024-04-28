@@ -83,7 +83,7 @@
 	export let configuration: Configuration;
 </script>
 
-<Modal open={true} size="lg" dismissable={false} bodyClass="space-y-0 min-h-96">
+<Modal open={true} size="lg" dismissable={false} bodyClass="min-h-96">
 	{#await Promise.all([glUsers, glProjects, glGroups])}
 		<AppLoading
 			title="Init Gitlab settings"
