@@ -66,16 +66,16 @@
 	<div class="flex flex-row justify-between">
 		<div class="flex flex-row gap-2 my-1">
 			{#if !isFirst}
-				<ArrowUpOutline size="sm" class="mt-1 cursor-pointer" on:click={() => dispatch('moveUp')} />
+				<Button size="xs" color="none" on:click={() => dispatch('moveUp')}>
+					<ArrowUpOutline size="sm" class="mt-1 cursor-pointer" />
+				</Button>
 			{:else}
 				<span class="w-4" />
 			{/if}
 			{#if !isLast}
-				<ArrowDownOutline
-					size="sm"
-					class="mt-1 cursor-pointer"
-					on:click={() => dispatch('moveDown')}
-				/>
+				<Button size="xs" color="none" on:click={() => dispatch('moveDown')}>
+					<ArrowDownOutline size="sm" class="mt-1 cursor-pointer" />
+				</Button>
 			{:else}
 				<span class="w-4" />
 			{/if}
@@ -131,11 +131,9 @@
 				</Dropdown>
 
 				{#if allowDelete}
-					<TrashBinSolid
-						size="sm"
-						class="my-2 cursor-pointer text-red-700"
-						on:click={() => dispatch('delete')}
-					/>
+					<Button size="xs" color="none" on:click={() => dispatch('delete')}>
+						<TrashBinSolid size="sm" class="my-2 cursor-pointer text-red-700" />
+					</Button>
 				{:else}
 					<span class="w-4" />
 				{/if}
