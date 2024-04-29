@@ -6,8 +6,8 @@
 		ClockOutline,
 		CodeBranchSolid,
 		InfoCircleOutline,
-		PlayOutline
-	} from 'flowbite-svelte-icons';
+		MessagesOutline,
+		PlayOutline	} from 'flowbite-svelte-icons';
 	import { createEventDispatcher } from 'svelte';
 
 	import { type MergeRequest, pipelineStatusToHuman } from '$lib/mr';
@@ -139,6 +139,11 @@
 					No pipeline
 				{/if}
 			{/await}
+		</div>
+	{/if}
+	{#if mr.user_notes_count}
+		<div class="flex gap-1 text-sm mx-2">
+			<MessagesOutline size="sm" class="mt-0.5" />{mr.user_notes_count}
 		</div>
 	{/if}
 	<div class="flex place-self-end">
