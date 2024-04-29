@@ -7,7 +7,8 @@
 		CodeBranchSolid,
 		InfoCircleOutline,
 		MessagesOutline,
-		PlayOutline	} from 'flowbite-svelte-icons';
+		PlayOutline
+	} from 'flowbite-svelte-icons';
 	import { createEventDispatcher } from 'svelte';
 
 	import { type MergeRequest, pipelineStatusToHuman } from '$lib/mr';
